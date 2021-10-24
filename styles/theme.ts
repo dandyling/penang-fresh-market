@@ -4,7 +4,8 @@ const theme = {
   ...ChakraTheme,
   colors: {
     ...ChakraTheme.colors,
-    brand: "#E84C4F",
+    brand: "hsl(359, 77%, 60%)",
+    brandBackground: "hsl(359, 77%, 95%)",
     background: "#F8F5F2",
   },
 };

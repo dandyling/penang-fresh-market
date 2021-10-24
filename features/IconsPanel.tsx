@@ -1,12 +1,12 @@
-import { AspectRatio, Flex, Grid, IconButton, Text } from "@chakra-ui/react";
+import { AspectRatio, Flex, Grid, Heading, IconButton } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React, { ReactElement } from "react";
 import {
-  FaDollarSign,
-  FaHeart,
-  FaInfoCircle,
-  FaWhatsapp,
-} from "react-icons/fa";
+  AiOutlineDollarCircle,
+  AiOutlineHeart,
+  AiOutlineInfoCircle,
+  AiOutlineWhatsApp,
+} from "react-icons/ai";
 import theme from "../styles/theme";
 
 interface IconButtonProps {
@@ -17,19 +17,19 @@ interface IconButtonProps {
 export const iconButtons: IconButtonProps[] = [
   {
     label: "Favorites",
-    icon: <FaHeart />,
+    icon: <AiOutlineHeart />,
   },
   {
     label: "Payments",
-    icon: <FaDollarSign />,
+    icon: <AiOutlineDollarCircle />,
   },
   {
-    label: "WhatsApp",
-    icon: <FaWhatsapp />,
+    label: "Contact",
+    icon: <AiOutlineWhatsApp />,
   },
   {
     label: "Info",
-    icon: <FaInfoCircle />,
+    icon: <AiOutlineInfoCircle />,
   },
 ];
 
@@ -51,7 +51,9 @@ export const IconsPanel = () => {
             <AspectRatio ratio={1}>
               <IconButton aria-label={icon.label} icon={icon.icon} />
             </AspectRatio>
-            <Text className="icon-label">{icon.label}</Text>
+            <Heading as="h2" className="icon-label">
+              {icon.label}
+            </Heading>
           </Flex>
         );
       })}
@@ -60,8 +62,10 @@ export const IconsPanel = () => {
 };
 
 const Container = styled(Grid)`
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
   .icon {
-    margin: 0.75rem;
+    margin: 0.5rem;
   }
   .chakra-aspect-ratio {
     display: flex;
@@ -70,7 +74,7 @@ const Container = styled(Grid)`
     background-color: ${theme.colors.white};
     margin-bottom: 0.25rem;
     border-radius: ${theme.radii.lg};
-    box-shadow: ${theme.shadows.md};
+    box-shadow: ${theme.shadows.sm};
   }
   button {
     position: static;
@@ -78,14 +82,16 @@ const Container = styled(Grid)`
     height: 100%;
     background-color: ${theme.colors.white};
     color: ${theme.colors.brand};
+    border-radius: ${theme.radii.lg};
   }
   svg {
-    width: 40%;
-    height: 40%;
+    width: 45%;
+    height: 45%;
   }
   .icon-label {
     text-align: center;
     font-size: ${theme.fontSizes.sm};
-    color: ${theme.colors.blackAlpha[700]};
+    font-weight: ${theme.fontWeights.normal};
+    color: ${theme.colors.gray[500]};
   }
 `;

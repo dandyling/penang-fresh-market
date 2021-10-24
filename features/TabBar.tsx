@@ -11,11 +11,14 @@ export const TabBar = styled(TabList)`
     border-bottom-width: 4px;
     border-bottom-color: ${theme.colors.brand};
   }
-  button > div {
+  button:focus {
+    box-shadow: none;
+  }
+  button > div > h3 {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     font-size: ${theme.fontSizes.lg};
-    font-weight: ${theme.fontWeights.semibold};
+    font-weight: ${theme.fontWeights.medium};
   }
   button {
     padding: 0;
