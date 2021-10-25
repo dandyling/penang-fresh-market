@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   Heading,
+  IconButton,
   Image,
   Text,
 } from "@chakra-ui/react";
@@ -16,6 +17,7 @@ import {
   AiOutlineLeft,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { MdAddShoppingCart } from "react-icons/md";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import useSWR from "swr";
 import { BottomPanel } from "../../components/BottomPanel";
@@ -24,12 +26,12 @@ import { FloatButton } from "../../components/FloatButton";
 import { NumbersPanel } from "../../components/NumbersPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { Product } from "../../features/Product";
-import { getPrice, getPriceLabel } from "../../features/ProductsPanel";
+import { getPriceLabel } from "../../features/ProductsPanel";
 import theme from "../../styles/theme";
 import { API, fetcher } from "../_app";
 import { Order } from "./../../features/Order";
 
-const ordersState = atom<Order[]>({
+export const ordersState = atom<Order[]>({
   key: "ordersState",
   default: [],
 });
@@ -86,6 +88,21 @@ const ProductPage: NextPage = () => {
     return null;
   }
 
+  const handleAddToCart = () => {
+    const newOrders = clone(orders);
+    const order = newOrders.find((o) => o.id === product.id);
+    if (order) {
+      order.quantity += quantity;
+    } else {
+      const newOrder: Order = {
+        ...product,
+        quantity,
+      };
+      newOrders.push(newOrder);
+    }
+    setOrders(newOrders);
+  };
+
   return (
     <PageWrapper title={`Penang Fresh Market - ${product.name}`}>
       <Flex width="100%" height="100%" position="relative">
@@ -137,7 +154,12 @@ const ProductPage: NextPage = () => {
         top="12"
         right="16"
       />
-      <Box position="fixed" top="12" right="3">
+      <Box
+        position="fixed"
+        top="12"
+        right="3"
+        onClick={() => router.push("/shopping-cart")}
+      >
         <FloatButton
           icon={<AiOutlineShoppingCart />}
           aria-label="Go to Shopping Cart"
@@ -152,32 +174,27 @@ const ProductPage: NextPage = () => {
         </CircleBadge>
       </Box>
       <BottomPanel>
-        <AddButton
-          color={theme.colors.brand}
-          borderColor={theme.colors.brand}
-          variant="outline"
-          width="100%"
-          size="lg"
-          onClick={() => {
-            const order: Order = {
-              ...product,
-              quantity,
-            };
-            setOrders([...orders, order]);
-          }}
-        >
-          <Text>{quantity} item</Text>
-          <Text className="label">Add to Cart</Text>
-          <Text>{getPrice(quantity * product.price)}</Text>
-        </AddButton>
-        <Button
-          rightIcon={<AiOutlineShoppingCart />}
-          backgroundColor={theme.colors.brand}
-          color="white"
-          size="lg"
-        >
-          Checkout
-        </Button>
+        <Flex>
+          <IconButton
+            size="lg"
+            variant="outline"
+            aria-label="Add to Cart"
+            color={theme.colors.brand}
+            borderColor={theme.colors.brand}
+            onClick={handleAddToCart}
+            icon={<MdAddShoppingCart />}
+          />
+          <Button
+            backgroundColor={theme.colors.brand}
+            color="white"
+            size="lg"
+            onClick={() => router.push("/shopping-cart")}
+            flex={1}
+            marginLeft="3"
+          >
+            Checkout
+          </Button>
+        </Flex>
       </BottomPanel>
     </PageWrapper>
   );
@@ -200,16 +217,7 @@ const Container = styled(Flex)`
   }
 `;
 
-const AddButton = styled(Button)`
-  justify-content: space-between;
-  background-color: ${theme.colors.white};
-  color: ${theme.colors.brand};
-  font-size: ${theme.fontSizes.sm};
-  font-weight: ${theme.fontWeights.normal};
-  .label {
-    font-size: ${theme.fontSizes.md};
-    font-weight: ${theme.fontWeights.medium};
-  }
-`;
+export const clone = <T extends unknown>(obj: T): T =>
+  JSON.parse(JSON.stringify(obj));
 
 export default ProductPage;

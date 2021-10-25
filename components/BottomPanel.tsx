@@ -9,6 +9,8 @@ export const BottomPanel = styled(Flex)`
   width: 100%;
   background-color: ${theme.colors.white};
   padding: 0.75rem;
+  box-shadow: ${theme.shadows.md};
+  border: 1px solid ${theme.colors.gray[100]};
   > * {
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;

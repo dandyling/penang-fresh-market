@@ -2,6 +2,7 @@ import {
   AspectRatio,
   Flex,
   Grid,
+  GridProps,
   Heading,
   Image,
   Text,
@@ -13,14 +14,19 @@ import { API } from "../pages/_app";
 import theme from "../styles/theme";
 import { Product } from "./Product";
 
-interface ProductsPanelProps {
+interface ProductsPanelProps extends GridProps {
   products: Product[];
 }
 
 export const ProductsPanel = (props: ProductsPanelProps) => {
-  const { products } = props;
+  const { products, ...rest } = props;
   return (
-    <Container width="100%" gridTemplateColumns="1fr" gridAutoRows="auto">
+    <Container
+      width="100%"
+      gridTemplateColumns="1fr"
+      gridAutoRows="auto"
+      {...rest}
+    >
       {products.map((product: Product) => {
         return (
           <Link key={product.id} href={`product/${product.id}`} passHref>
