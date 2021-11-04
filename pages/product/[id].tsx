@@ -4,15 +4,18 @@ import {
   Button,
   Flex,
   Heading,
+  Icon,
   IconButton,
   Image,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import React, { useState } from "react";
 import {
+  AiFillCheckCircle,
   AiOutlineHeart,
   AiOutlineLeft,
   AiOutlineShoppingCart,
@@ -24,16 +27,18 @@ import { BottomPanel } from "../../components/BottomPanel";
 import { CircleBadge } from "../../components/CircleBadge";
 import { FloatButton } from "../../components/FloatButton";
 import { NumbersPanel } from "../../components/NumbersPanel";
+import { Toast } from "../../components/Toast";
 import { PageWrapper } from "../../components/PageWrapper";
 import { Product } from "../../features/Product";
 import { getPriceLabel } from "../../features/ProductsPanel";
 import theme from "../../styles/theme";
 import { API, fetcher } from "../_app";
 import { Order } from "./../../features/Order";
+import { isServer } from "../../utils/utils";
 
 export const ordersState = atom<Order[]>({
   key: "ordersState",
-  default: [],
+  default: !isServer ? JSON.parse(localStorage.getItem("orders") ?? "[]") : [],
 });
 
 const ordersSubState = selector<number[]>({
@@ -70,6 +75,7 @@ const ProductPage: NextPage = () => {
   const [orders, setOrders] = useRecoilState(ordersState);
   const ordersCount = useRecoilValue(ordersCountState);
   const { id } = router.query;
+  const toast = useToast();
   const { data: products, error: errorProducts } = useSWR<Product[]>(
     `${API}/products`,
     fetcher
@@ -101,6 +107,17 @@ const ProductPage: NextPage = () => {
       newOrders.push(newOrder);
     }
     setOrders(newOrders);
+    localStorage.setItem("orders", JSON.stringify(newOrders));
+    toast({
+      position: "top",
+      duration: 800,
+      render: () => (
+        <Toast>
+          <Text textAlign="center">{quantity} item added to cart</Text>
+          <Icon fontSize="xl" ml="2" as={AiFillCheckCircle} />
+        </Toast>
+      ),
+    });
   };
 
   return (

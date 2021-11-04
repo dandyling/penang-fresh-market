@@ -74,7 +74,7 @@ const Container = styled(Grid)`
     background-color: ${theme.colors.white};
     margin-bottom: 0.25rem;
     border-radius: ${theme.radii.lg};
-    box-shadow: ${theme.shadows.sm};
+    box-shadow: ${theme.shadows.lg};
   }
   button {
     position: static;

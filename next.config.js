@@ -3,7 +3,9 @@
 module.exports = {
   reactStrictMode: true,
   env: {
-    // API: "http://localhost:1337",
-    API: "https://strapi-opei.onrender.com",
+    API:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:1337"
+        : "https://strapi-opei.onrender.com",
   },
 };

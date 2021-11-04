@@ -34,7 +34,9 @@ export const CategoriesProducts = (props: CategoriesProductsProps) => {
           return (
             <Tab key={category.id}>
               <Flex>
-                <Heading as="h3">{category.name}</Heading>
+                <Heading textShadow="2xl" as="h3">
+                  {category.name}
+                </Heading>
               </Flex>
             </Tab>
           );

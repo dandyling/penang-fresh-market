@@ -40,7 +40,7 @@ const Home: NextPage = () => {
   );
   return (
     <PageWrapper title="Penang Fresh Market">
-      <Flex as="header" direction="column" width="100%" paddingTop="6">
+      <Flex as="header" direction="column" width="100%" paddingY="3">
         <SearchBar padding="3" search={search} setSearch={setSearch} />
         <IconsPanel />
       </Flex>
@@ -49,6 +49,8 @@ const Home: NextPage = () => {
         padding="3"
         flexDirection="column"
         backgroundColor="white"
+        shadow="lg"
+        borderRadius="2xl"
         flex={1}
       >
         {search === "" && (
