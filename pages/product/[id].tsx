@@ -94,7 +94,7 @@ const ProductPage: NextPage = () => {
     return null;
   }
 
-  const handleAddToCart = () => {
+  const addToCart = () => {
     const newOrders = clone(orders);
     const order = newOrders.find((o) => o.id === product.id);
     if (order) {
@@ -108,6 +108,10 @@ const ProductPage: NextPage = () => {
     }
     setOrders(newOrders);
     localStorage.setItem("orders", JSON.stringify(newOrders));
+  };
+
+  const handleAddToCart = () => {
+    addToCart();
     toast({
       position: "top",
       duration: 800,
@@ -118,6 +122,11 @@ const ProductPage: NextPage = () => {
         </Toast>
       ),
     });
+  };
+
+  const handleCheckout = () => {
+    addToCart();
+    router.push("/shopping-cart");
   };
 
   return (
@@ -205,7 +214,7 @@ const ProductPage: NextPage = () => {
             backgroundColor={theme.colors.brand}
             color="white"
             size="lg"
-            onClick={() => router.push("/shopping-cart")}
+            onClick={handleCheckout}
             flex={1}
             marginLeft="3"
           >
