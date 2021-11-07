@@ -126,7 +126,7 @@ const ProductPage: NextPage = () => {
     });
   };
 
-  const handleCheckout = () => {
+  const handleBuyNow = () => {
     addToCart();
     router.push("/shopping-cart");
   };
@@ -216,11 +216,11 @@ const ProductPage: NextPage = () => {
             backgroundColor={theme.colors.brand}
             color="white"
             size="lg"
-            onClick={handleCheckout}
+            onClick={handleBuyNow}
             flex={1}
             marginLeft="3"
           >
-            Checkout
+            Buy Now
           </Button>
         </Flex>
       </BottomPanel>

@@ -13,16 +13,17 @@ import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { AiOutlineLeft } from "react-icons/ai";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { BottomPanel } from "../../components/BottomPanel";
 import { PageWrapper } from "../../components/PageWrapper";
+import { NoOrdersPanel } from "../../features/NoOrdersPanel";
 import { ProductOrdersPanel } from "../../features/ProductOrdersPanel";
 import theme from "../../styles/theme";
 import { ordersState } from "../product/[id]";
 
 const ShoppingCartPage: NextPage = () => {
   const router = useRouter();
-  const [orders, setOrders] = useRecoilState(ordersState);
+  const orders = useRecoilValue(ordersState);
   return (
     <PageWrapper title="Penang Fresh Market - Shopping Cart">
       <Flex
@@ -100,7 +101,8 @@ const ShoppingCartPage: NextPage = () => {
             <Heading as="h2" fontSize="xl" fontWeight="semibold">
               My Bucket
             </Heading>
-            <ProductOrdersPanel orders={orders ?? []} />
+            <ProductOrdersPanel />
+            {orders.length === 0 && <NoOrdersPanel />}
           </Flex>
         </Flex>
       </Flex>

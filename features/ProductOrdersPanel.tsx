@@ -16,6 +16,24 @@ import { Container } from "./ProductsPanel";
 export const ProductOrdersPanel = (props: GridProps) => {
   const [orders, setOrders] = useRecoilState(ordersState);
   const { ...rest } = props;
+
+  const removeOrder = (i: number) => {
+    const newOrders = produce(orders, (draft) => {
+      draft.splice(i, 1);
+    });
+    setOrders(newOrders);
+    localStorage.setItem("orders", JSON.stringify(newOrders));
+  };
+
+  const addOrder = (i: number, quantity: number) => {
+    const newOrders = produce(orders, (draft) => {
+      const selectedOrder = draft[i];
+      selectedOrder.quantity += quantity;
+    });
+    setOrders(newOrders);
+    localStorage.setItem("orders", JSON.stringify(newOrders));
+  };
+
   return (
     <Container
       width="100%"
@@ -25,19 +43,25 @@ export const ProductOrdersPanel = (props: GridProps) => {
     >
       {orders.map((order: Order, i) => {
         const handleIncrement = () => {
-          const newOrders = produce(orders, (draft) => {
-            const selectedOrder = draft[i];
-            selectedOrder.quantity += 1;
-          });
-          setOrders(newOrders);
+          addOrder(i, 1);
         };
 
         const handleDecrement = () => {
-          const newOrders = produce(orders, (draft) => {
-            const selectedOrder = draft[i];
-            selectedOrder.quantity -= 1;
-          });
-          setOrders(newOrders);
+          const selectedOrder = orders[i];
+          if (selectedOrder.quantity > 1) {
+            addOrder(i, -1);
+          } else {
+            handleRemove();
+          }
+        };
+
+        const handleRemove = () => {
+          const yes = confirm(
+            "Do you want to remove this product from the shopping cart?"
+          );
+          if (yes) {
+            removeOrder(i);
+          }
         };
 
         return (
@@ -59,19 +83,18 @@ export const ProductOrdersPanel = (props: GridProps) => {
                 <PanelButton
                   aria-label="Remove product"
                   icon={<AiOutlineDelete />}
+                  onClick={handleRemove}
                 />
               </Flex>
-              {order.quantity && (
-                <NumbersPanel
-                  alignSelf="flex-end"
-                  paddingTop="2"
-                  value={order.quantity}
-                  min={0}
-                  max={99}
-                  onIncrement={handleIncrement}
-                  onDecrement={handleDecrement}
-                />
-              )}
+              <NumbersPanel
+                alignSelf="flex-end"
+                paddingTop="2"
+                value={order.quantity}
+                min={0}
+                max={99}
+                onIncrement={handleIncrement}
+                onDecrement={handleDecrement}
+              />
             </Flex>
           </Flex>
         );
