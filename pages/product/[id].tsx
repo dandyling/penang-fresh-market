@@ -35,6 +35,7 @@ import theme from "../../styles/theme";
 import { API, fetcher } from "../_app";
 import { Order } from "./../../features/Order";
 import { isServer } from "../../utils/utils";
+import produce from "immer";
 
 export const ordersState = atom<Order[]>({
   key: "ordersState",
@@ -95,17 +96,18 @@ const ProductPage: NextPage = () => {
   }
 
   const addToCart = () => {
-    const newOrders = clone(orders);
-    const order = newOrders.find((o) => o.id === product.id);
-    if (order) {
-      order.quantity += quantity;
-    } else {
-      const newOrder: Order = {
-        ...product,
-        quantity,
-      };
-      newOrders.push(newOrder);
-    }
+    const newOrders = produce(orders, (draft) => {
+      const order = draft.find((o) => o.id === product.id);
+      if (order) {
+        order.quantity += quantity;
+      } else {
+        const newOrder: Order = {
+          ...product,
+          quantity,
+        };
+        draft.push(newOrder);
+      }
+    });
     setOrders(newOrders);
     localStorage.setItem("orders", JSON.stringify(newOrders));
   };
@@ -242,8 +244,5 @@ const Container = styled(Flex)`
     margin-bottom: 0.25rem;
   }
 `;
-
-export const clone = <T extends unknown>(obj: T): T =>
-  JSON.parse(JSON.stringify(obj));
 
 export default ProductPage;
