@@ -16,7 +16,7 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { useRecoilState } from "recoil";
 import { BottomPanel } from "../../components/BottomPanel";
 import { PageWrapper } from "../../components/PageWrapper";
-import { ProductsPanel } from "../../features/ProductsPanel";
+import { ProductOrdersPanel } from "../../features/ProductOrdersPanel";
 import theme from "../../styles/theme";
 import { ordersState } from "../product/[id]";
 
@@ -100,7 +100,7 @@ const ShoppingCartPage: NextPage = () => {
             <Heading as="h2" fontSize="xl" fontWeight="semibold">
               My Bucket
             </Heading>
-            <ProductsPanel products={orders ?? []} />
+            <ProductOrdersPanel orders={orders ?? []} />
           </Flex>
         </Flex>
       </Flex>

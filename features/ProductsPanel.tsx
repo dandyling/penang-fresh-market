@@ -1,25 +1,14 @@
-import {
-  AspectRatio,
-  Flex,
-  Grid,
-  GridProps,
-  Heading,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { AspectRatio, Flex, Grid, GridProps, Image } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Link from "next/link";
 import React from "react";
-import { AiOutlineDelete } from "react-icons/ai";
-import { FloatButton } from "../components/FloatButton";
-import { NumbersPanel } from "../components/NumbersPanel";
 import { API } from "../pages/_app";
 import theme from "../styles/theme";
-import { Order } from "./Order";
 import { Product } from "./Product";
+import { ProductDescription } from "./ProductDescription";
 
 interface ProductsPanelProps extends GridProps {
-  products: Product[] | Order[];
+  products: Product[];
 }
 
 export const ProductsPanel = (props: ProductsPanelProps) => {
@@ -31,7 +20,7 @@ export const ProductsPanel = (props: ProductsPanelProps) => {
       gridAutoRows="auto"
       {...rest}
     >
-      {products.map((product: Product | Order) => {
+      {products.map((product: Product) => {
         return (
           <Link key={product.id} href={`product/${product.id}`} passHref>
             <Flex as="button" className="product">
@@ -44,32 +33,7 @@ export const ProductsPanel = (props: ProductsPanelProps) => {
                 />
               </AspectRatio>
               <Flex padding="2" flex={1} flexDirection="column">
-                <Flex minWidth="100%" justifyContent="space-between">
-                  <Flex flexDirection="column">
-                    <Heading as="h3" fontSize="md" fontWeight="medium">
-                      {product.name}
-                    </Heading>
-                    <Text fontSize="sm" color="gray.500">
-                      {product.label}
-                    </Text>
-                    <Text fontSize="sm">{getPriceLabel(product)}</Text>
-                  </Flex>
-                  <PanelButton
-                    aria-label="Remove product"
-                    icon={<AiOutlineDelete />}
-                  />
-                </Flex>
-                {(product as Order)?.quantity && (
-                  <NumbersPanel
-                    alignSelf="flex-end"
-                    paddingTop="2"
-                    value={(product as Order)?.quantity}
-                    min={0}
-                    max={99}
-                    onIncrement={console.log}
-                    onDecrement={console.log}
-                  />
-                )}
+                <ProductDescription product={product} />
               </Flex>
             </Flex>
           </Link>
@@ -103,8 +67,3 @@ export const getPricePerUnit = (price: number, unit: string) => {
 export const getPrice = (price: number) => {
   return `RM ${price.toFixed(2)}`;
 };
-
-const PanelButton = styled(FloatButton)`
-  box-shadow: ${theme.shadows.lg};
-  border: 1px solid ${theme.colors.gray[100]};
-`;
