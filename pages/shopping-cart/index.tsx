@@ -11,6 +11,7 @@ import {
 import styled from "@emotion/styled";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
+import Link from "next/link";
 import React from "react";
 import { AiOutlineLeft } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
@@ -107,9 +108,11 @@ const ShoppingCartPage: NextPage = () => {
         </Flex>
       </Flex>
       <BottomPanel>
-        <Button backgroundColor={theme.colors.brand} color="white" size="lg">
-          Place Order
-        </Button>
+        <Link href="/order-confirmed" passHref>
+          <Button backgroundColor={theme.colors.brand} color="white" size="lg">
+            Place Order
+          </Button>
+        </Link>
       </BottomPanel>
     </PageWrapper>
   );
