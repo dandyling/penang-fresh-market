@@ -7,6 +7,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Text,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { NextPage } from "next";
@@ -20,11 +21,12 @@ import { PageWrapper } from "../../components/PageWrapper";
 import { NoOrdersPanel } from "../../features/NoOrdersPanel";
 import { ProductOrdersPanel } from "../../features/ProductOrdersPanel";
 import theme from "../../styles/theme";
-import { ordersState } from "../product/[id]";
+import { ordersState, ordersTotalState } from "../product/[id]";
 
 const ShoppingCartPage: NextPage = () => {
   const router = useRouter();
   const orders = useRecoilValue(ordersState);
+  const ordersTotal = useRecoilValue(ordersTotalState);
   return (
     <PageWrapper title="Penang Fresh Market - Shopping Cart">
       <Flex
@@ -109,8 +111,14 @@ const ShoppingCartPage: NextPage = () => {
       </Flex>
       <BottomPanel>
         <Link href="/order-confirmed" passHref>
-          <Button backgroundColor={theme.colors.brand} color="white" size="lg">
-            Place Order
+          <Button
+            backgroundColor={theme.colors.brand}
+            color="white"
+            size="lg"
+            justifyContent="space-between"
+          >
+            <Text>Place Order</Text>
+            <Text>RM {ordersTotal.toFixed(2)}</Text>
           </Button>
         </Link>
       </BottomPanel>

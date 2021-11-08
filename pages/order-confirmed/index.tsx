@@ -55,6 +55,7 @@ const OrderConfirmedPage: NextPage = () => {
             variant="outline"
             borderColor={theme.colors.brand}
             size="lg"
+            disabled
           >
             Check order status
           </Button>
@@ -72,7 +73,7 @@ const Container = styled(Flex)`
 `;
 
 const OuterContainer = styled(Flex)`
-  padding: 1.5rem 1.5rem;
+  padding: 4.5rem 1.5rem 1.5rem 1.5rem;
   > * {
     margin-top: 1rem;
     margin-bottom: 1rem;

@@ -50,7 +50,7 @@ const ordersSubState = selector<number[]>({
   },
 });
 
-const ordersTotalState = selector<number>({
+export const ordersTotalState = selector<number>({
   key: "ordersTotalState",
   get: ({ get }) => {
     const ordersSub = get(ordersSubState);

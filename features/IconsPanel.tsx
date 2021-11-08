@@ -49,7 +49,7 @@ export const IconsPanel = () => {
             key={icon.label}
           >
             <AspectRatio ratio={1}>
-              <IconButton aria-label={icon.label} icon={icon.icon} />
+              <IconButton disabled aria-label={icon.label} icon={icon.icon} />
             </AspectRatio>
             <Heading as="h2" className="icon-label">
               {icon.label}
