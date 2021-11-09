@@ -45,7 +45,7 @@ export const CategoriesProducts = (props: CategoriesProductsProps) => {
       <TabPanels>
         {categories.map((category: Category) => {
           const categoryProducts = products.filter(
-            (product) => product.category.id === category.id
+            (product) => product.category?.id === category.id
           );
           return (
             <TabPanel key={category.id} padding="0">
