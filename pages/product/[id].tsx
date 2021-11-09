@@ -192,14 +192,16 @@ const ProductPage: NextPage = () => {
           icon={<AiOutlineShoppingCart />}
           aria-label="Go to Shopping Cart"
         />
-        <CircleBadge
-          position="absolute"
-          bottom="-1"
-          right="-1"
-          fontSize="xx-small"
-        >
-          {ordersCount}
-        </CircleBadge>
+        {ordersCount > 0 && (
+          <CircleBadge
+            position="absolute"
+            bottom="-1"
+            right="-1"
+            fontSize="xx-small"
+          >
+            {ordersCount}
+          </CircleBadge>
+        )}
       </Box>
       <BottomPanel>
         <Flex>

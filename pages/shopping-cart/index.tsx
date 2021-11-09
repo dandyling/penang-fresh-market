@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  FormControl,
   Grid,
   Heading,
   IconButton,
@@ -8,25 +9,79 @@ import {
   InputGroup,
   InputLeftAddon,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import Link from "next/link";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { AiOutlineLeft } from "react-icons/ai";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { BottomPanel } from "../../components/BottomPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { NoOrdersPanel } from "../../features/NoOrdersPanel";
 import { ProductOrdersPanel } from "../../features/ProductOrdersPanel";
 import theme from "../../styles/theme";
 import { ordersState, ordersTotalState } from "../product/[id]";
+import { API } from "../_app";
+
+interface DeliveryDetails {
+  name: string;
+  phoneNumber: string;
+  address1: string;
+  address2: string;
+  notes: string;
+}
 
 const ShoppingCartPage: NextPage = () => {
   const router = useRouter();
-  const orders = useRecoilValue(ordersState);
+  const [orders, setOrders] = useRecoilState(ordersState);
   const ordersTotal = useRecoilValue(ordersTotalState);
+  const { register, handleSubmit } = useForm();
+  const toast = useToast();
+
+  const handleOrder = async (data: DeliveryDetails) => {
+    try {
+      const response = await fetch(`${API}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone_number: data.phoneNumber,
+          notes: data.notes,
+          status: "new",
+          products: orders.map((order) => ({
+            code: order.label,
+            name: order.name,
+            quantity: order.quantity,
+            unit: order.unit,
+          })),
+          name: data.name,
+          address_line_1: data.address1,
+          address_line_2: data.address2,
+        }),
+      });
+      if (response.ok) {
+        await router.push("/order-confirmed");
+        setOrders([]);
+        localStorage.setItem("orders", "[]");
+      } else {
+        console.error(await response.json());
+        toast({
+          title: "Error",
+          description: "Unable to complete order",
+          status: "error",
+          duration: 2000,
+          position: "top",
+        });
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <PageWrapper title="Penang Fresh Market - Shopping Cart">
       <Flex
@@ -82,14 +137,40 @@ const ShoppingCartPage: NextPage = () => {
               Delivery Details
             </Heading>
             <Container>
-              <Input placeholder="Name"></Input>
-              <InputGroup>
-                <InputLeftAddon>+60</InputLeftAddon>
-                <Input type="tel" placeholder="Phone Number" />
-              </InputGroup>
-              <Input placeholder="Street Address 1"></Input>
-              <Input placeholder="Street Address 2"></Input>
-              <Input placeholder="Notes"></Input>
+              <FormControl isRequired>
+                <Input
+                  placeholder="Name"
+                  {...register("name", { required: true })}
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <InputGroup>
+                  <InputLeftAddon>+60</InputLeftAddon>
+                  <Input
+                    type="tel"
+                    placeholder="Phone Number"
+                    {...register("phoneNumber", {
+                      required: true,
+                      minLength: 9,
+                    })}
+                  />
+                </InputGroup>
+              </FormControl>
+              <FormControl isRequired>
+                <Input
+                  placeholder="Street Address 1"
+                  {...register("address1", { required: true })}
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <Input
+                  placeholder="Street Address 2"
+                  {...register("address2", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <Input placeholder="Notes" {...register("notes")} />
+              </FormControl>
             </Container>
           </Flex>
         </Flex>
@@ -110,17 +191,16 @@ const ShoppingCartPage: NextPage = () => {
         </Flex>
       </Flex>
       <BottomPanel>
-        <Link href="/order-confirmed" passHref>
-          <Button
-            backgroundColor={theme.colors.brand}
-            color="white"
-            size="lg"
-            justifyContent="space-between"
-          >
-            <Text>Place Order</Text>
-            <Text>RM {ordersTotal.toFixed(2)}</Text>
-          </Button>
-        </Link>
+        <Button
+          backgroundColor={theme.colors.brand}
+          color="white"
+          size="lg"
+          justifyContent="space-between"
+          onClick={handleSubmit(handleOrder)}
+        >
+          <Text>Place Order</Text>
+          <Text>RM {ordersTotal.toFixed(2)}</Text>
+        </Button>
       </BottomPanel>
     </PageWrapper>
   );
