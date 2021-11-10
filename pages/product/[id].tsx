@@ -135,12 +135,14 @@ const ProductPage: NextPage = () => {
     <PageWrapper title={`Penang Fresh Market - ${product.name}`}>
       <Flex width="100%" height="100%" position="relative">
         <AspectRatio
+          position="absolute"
           ratio={1.36}
           minWidth="100%"
           shadow="md"
           borderBottomWidth="0.5px"
           borderBottomStyle="solid"
           borderBottomColor="gray.50"
+          top="0"
         >
           <Image
             alt={product.name}

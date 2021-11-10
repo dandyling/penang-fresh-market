@@ -1,6 +1,8 @@
-import { Flex, FlexProps } from "@chakra-ui/react";
+import { FlexProps } from "@chakra-ui/react";
+import styled from "@emotion/styled";
 import Head from "next/head";
 import React, { ReactNode } from "react";
+import Div100vh from "react-div-100vh";
 import theme from "../styles/theme";
 
 interface PageWrapperProps extends FlexProps {
@@ -11,18 +13,20 @@ interface PageWrapperProps extends FlexProps {
 export const PageWrapper = (props: PageWrapperProps) => {
   const { title, children } = props;
   return (
-    <Flex
-      minWidth="100vw"
-      minHeight="100vh"
-      backgroundColor={theme.colors.background}
-      flexDirection="column"
-    >
+    <FullHeight>
       <Head>
         <title>{title}</title>
         <meta name="description" content={title} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {children}
-    </Flex>
+    </FullHeight>
   );
 };
+
+const FullHeight = styled(Div100vh)`
+  display: flex;
+  flex-direction: column;
+  min-width: 100vw;
+  background-color: ${theme.colors.background};
+`;
