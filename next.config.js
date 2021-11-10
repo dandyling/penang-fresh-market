@@ -8,4 +8,7 @@ module.exports = {
         ? "http://localhost:1337"
         : "https://strapi-opei.onrender.com",
   },
+  images: {
+    domains: ["localhost", "penang-fresh-market.vercel.app"],
+  },
 };

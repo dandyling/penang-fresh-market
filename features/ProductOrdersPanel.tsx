@@ -1,4 +1,4 @@
-import { AspectRatio, Flex, GridProps, Image } from "@chakra-ui/react";
+import { AspectRatio, Flex, GridProps } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import produce from "immer";
 import React from "react";
@@ -12,6 +12,7 @@ import theme from "../styles/theme";
 import { Order } from "./Order";
 import { ProductDescription } from "./ProductDescription";
 import { Container } from "./ProductsPanel";
+import Image from "next/image";
 
 export const ProductOrdersPanel = (props: GridProps) => {
   const [orders, setOrders] = useRecoilState(ordersState);
@@ -67,10 +68,19 @@ export const ProductOrdersPanel = (props: GridProps) => {
         return (
           <Flex key={order.id} className="product">
             <Flex minWidth="20%" mr="4" flexDirection="column">
-              <AspectRatio ratio={72 / 82} minWidth="100%">
+              <AspectRatio
+                borderRadius="lg"
+                borderWidth="1px"
+                borderColor="gray.200"
+                shadow="lg"
+                ratio={72 / 82}
+                minWidth="100%"
+                borderStyle="solid"
+                overflow="hidden"
+              >
                 <Image
-                  borderRadius="lg"
-                  shadow="lg"
+                  layout="fill"
+                  objectFit="cover"
                   src={`${API}${order.picture?.formats?.thumbnail.url}`}
                   alt={order.name}
                 />

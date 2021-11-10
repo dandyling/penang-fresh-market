@@ -1,10 +1,11 @@
-import { Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { AspectRatio, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 import { PageWrapper } from "../../components/PageWrapper";
 import theme from "../../styles/theme";
+import Image from "next/image";
 
 const OrderConfirmedPage: NextPage = () => {
   return (
@@ -21,7 +22,14 @@ const OrderConfirmedPage: NextPage = () => {
           flexDirection="column"
           textAlign="center"
         >
-          <Image src="/Delivery confirmed.svg" alt="Your order is confirmed" />
+          <AspectRatio ratio={267 / 294} minWidth="100%">
+            <Image
+              src="/Delivery confirmed.svg"
+              alt="Your order is confirmed"
+              layout="fill"
+              objectFit="cover"
+            />
+          </AspectRatio>
           <Flex flexDirection="column">
             <Heading mb="1" as="h1" fontSize="2xl" fontWeight="semibold">
               Your order is confirmed!
@@ -73,7 +81,7 @@ const Container = styled(Flex)`
 `;
 
 const OuterContainer = styled(Flex)`
-  padding: 4.5rem 1.5rem 1.5rem 1.5rem;
+  padding: 3rem 1.5rem 1.5rem 1.5rem;
   > * {
     margin-top: 1rem;
     margin-bottom: 1rem;

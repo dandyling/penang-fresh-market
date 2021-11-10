@@ -41,7 +41,12 @@ const Home: NextPage = () => {
   return (
     <PageWrapper title="Penang Fresh Market">
       <Flex as="header" direction="column" width="100%" paddingY="3">
-        <SearchBar padding="3" search={search} setSearch={setSearch} />
+        <SearchBar
+          padding="3"
+          search={search}
+          setSearch={setSearch}
+          placeholder="Search Penang Fresh Market here"
+        />
         <IconsPanel />
       </Flex>
       <Flex

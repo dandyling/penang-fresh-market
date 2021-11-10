@@ -13,21 +13,25 @@ import theme from "../styles/theme";
 interface SearchBarProps extends FlexProps {
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
 }
-export const SearchBar = ({ search, setSearch, ...rest }: SearchBarProps) => (
-  <Flex {...rest}>
-    <InputGroup size="sm">
-      <Input
-        backgroundColor={theme.colors.brandBackground}
-        placeholder="Search here"
-        border="none"
-        borderRadius="24"
-        value={search}
-        onChange={(e) => setSearch(e.currentTarget.value)}
-      />
-      <InputRightElement pointerEvents="none">
-        <Icon color={theme.colors.brand} as={AiOutlineSearch} />
-      </InputRightElement>
-    </InputGroup>
-  </Flex>
-);
+export const SearchBar = (props: SearchBarProps) => {
+  const { search, setSearch, placeholder, ...rest } = props;
+  return (
+    <Flex {...rest}>
+      <InputGroup size="sm">
+        <Input
+          backgroundColor={theme.colors.brandBackground}
+          placeholder={placeholder}
+          border="none"
+          borderRadius="24"
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        />
+        <InputRightElement pointerEvents="none">
+          <Icon color={theme.colors.brand} as={AiOutlineSearch} />
+        </InputRightElement>
+      </InputGroup>
+    </Flex>
+  );
+};

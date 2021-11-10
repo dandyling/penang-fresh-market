@@ -6,7 +6,6 @@ import {
   Heading,
   Icon,
   IconButton,
-  Image,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -36,6 +35,7 @@ import { API, fetcher } from "../_app";
 import { Order } from "./../../features/Order";
 import { isServer } from "../../utils/utils";
 import produce from "immer";
+import Image from "next/image";
 
 export const ordersState = atom<Order[]>({
   key: "ordersState",
@@ -145,6 +145,8 @@ const ProductPage: NextPage = () => {
           <Image
             alt={product.name}
             src={`${API}${product.picture.formats.small.url}`}
+            layout="fill"
+            objectFit="cover"
           />
         </AspectRatio>
         <Flex position="absolute" top="56" width="100%" paddingX="3">
