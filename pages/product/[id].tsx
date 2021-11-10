@@ -36,6 +36,7 @@ import { Order } from "./../../features/Order";
 import { isServer } from "../../utils/utils";
 import produce from "immer";
 import Image from "next/image";
+import { LinearProgress } from "@material-ui/core";
 
 export const ordersState = atom<Order[]>({
   key: "ordersState",
@@ -87,7 +88,7 @@ const ProductPage: NextPage = () => {
   }
 
   if (!products) {
-    return <Flex>Loading...</Flex>;
+    return <LinearProgress color="secondary" />;
   }
 
   const product = products?.find((p) => p.id === Number(id));

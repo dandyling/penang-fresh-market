@@ -1,4 +1,5 @@
 import { Flex, Heading } from "@chakra-ui/react";
+import { LinearProgress } from "@material-ui/core";
 import type { NextPage } from "next";
 import React from "react";
 import { atom, useRecoilState } from "recoil";
@@ -31,7 +32,7 @@ const Home: NextPage = () => {
     return <Flex>An error has occurred.</Flex>;
   }
   if (!products || !categories) {
-    return <Flex>Loading...</Flex>;
+    return <LinearProgress color="secondary" />;
   }
   const searchedProducts = products.filter(
     (product) =>
