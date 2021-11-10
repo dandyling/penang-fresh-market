@@ -10,9 +10,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import produce from "immer";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import React, { useState } from "react";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import {
   AiFillCheckCircle,
   AiOutlineHeart,
@@ -20,29 +22,21 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { MdAddShoppingCart } from "react-icons/md";
-import {
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from "recoil";
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import useSWR from "swr";
 import { BottomPanel } from "../../components/BottomPanel";
 import { CircleBadge } from "../../components/CircleBadge";
 import { FloatButton } from "../../components/FloatButton";
 import { NumbersPanel } from "../../components/NumbersPanel";
+import { PageWrapper } from "../../components/PageWrapper";
 import { Toast } from "../../components/Toast";
-import { isLoadingState, PageWrapper } from "../../components/PageWrapper";
 import { Product } from "../../features/Product";
 import { getPriceLabel } from "../../features/ProductsPanel";
+import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
+import { isServer } from "../../utils/utils";
 import { API, fetcher } from "../_app";
 import { Order } from "./../../features/Order";
-import { isServer } from "../../utils/utils";
-import produce from "immer";
-import Image from "next/image";
-import { useEffect } from "react";
 
 export const ordersState = atom<Order[]>({
   key: "ordersState",
@@ -82,18 +76,23 @@ const ProductPage: NextPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [orders, setOrders] = useRecoilState(ordersState);
   const ordersCount = useRecoilValue(ordersCountState);
-  const setIsLoading = useSetRecoilState(isLoadingState);
   const { id } = router.query;
   const toast = useToast();
 
-  useEffect(() => {
-    setIsLoading(false);
-  });
+  const { startProgress, stopProgress } = useProgress();
 
   const { data: products, error: errorProducts } = useSWR<Product[]>(
     `${API}/products`,
     fetcher
   );
+
+  useEffect(() => {
+    if (!products) {
+      startProgress();
+    } else {
+      stopProgress();
+    }
+  }, [products, startProgress, stopProgress]);
 
   if (errorProducts) {
     return <Flex>An error has occurred.</Flex>;
@@ -140,6 +139,7 @@ const ProductPage: NextPage = () => {
   };
 
   const handleBuyNow = () => {
+    startProgress();
     addToCart();
     router.push("/shopping-cart");
   };

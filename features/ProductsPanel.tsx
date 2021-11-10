@@ -28,8 +28,8 @@ export const ProductsPanel = (props: ProductsPanelProps) => {
     >
       {products.map((product: Product) => {
         const handleClick = () => {
-          router.push(`product/${product.id}`);
           setIsLoading(true);
+          router.push(`product/${product.id}`);
         };
 
         return (

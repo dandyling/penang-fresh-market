@@ -1,16 +1,16 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import React from "react";
-import { useEffect } from "react";
-import { atom, useRecoilState, useSetRecoilState } from "recoil";
+import React, { useEffect } from "react";
+import { atom, useRecoilState } from "recoil";
 import useSWR from "swr";
-import { isLoadingState, PageWrapper } from "../components/PageWrapper";
+import { PageWrapper } from "../components/PageWrapper";
 import { CategoriesProducts } from "../features/CategoriesProducts";
 import { Category } from "../features/Category";
 import { IconsPanel } from "../features/IconsPanel";
 import { Product } from "../features/Product";
 import { ProductsPanel } from "../features/ProductsPanel";
 import { SearchBar } from "../features/SearchBar";
+import { useProgress } from "../hooks/useProgress";
 import { API, fetcher } from "./_app";
 
 const searchState = atom({
@@ -20,7 +20,7 @@ const searchState = atom({
 
 const Home: NextPage = () => {
   const [search, setSearch] = useRecoilState(searchState);
-  const setIsLoading = useSetRecoilState(isLoadingState);
+  const { startProgress, stopProgress } = useProgress();
   const { data: categories, error: errorCategories } = useSWR<Category[]>(
     `${API}/categories`,
     fetcher
@@ -32,11 +32,11 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (!products || !categories) {
-      setIsLoading(true);
+      startProgress();
     } else {
-      setIsLoading(false);
+      stopProgress();
     }
-  }, [products, categories, setIsLoading]);
+  }, [products, categories, startProgress, stopProgress]);
 
   if (errorProducts || errorCategories) {
     return <Flex>An error has occurred.</Flex>;

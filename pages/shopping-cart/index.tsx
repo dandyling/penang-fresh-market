@@ -22,6 +22,7 @@ import { BottomPanel } from "../../components/BottomPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { NoOrdersPanel } from "../../features/NoOrdersPanel";
 import { ProductOrdersPanel } from "../../features/ProductOrdersPanel";
+import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
 import { ordersState, ordersTotalState } from "../product/[id]";
 import { API } from "../_app";
@@ -40,6 +41,7 @@ const ShoppingCartPage: NextPage = () => {
   const ordersTotal = useRecoilValue(ordersTotalState);
   const { register, handleSubmit } = useForm();
   const toast = useToast();
+  const { startProgress } = useProgress();
 
   const handleOrder = async (data: DeliveryDetails) => {
     try {
@@ -64,6 +66,7 @@ const ShoppingCartPage: NextPage = () => {
         }),
       });
       if (response.ok) {
+        startProgress();
         await router.push("/order-confirmed");
         setOrders([]);
         localStorage.setItem("orders", "[]");

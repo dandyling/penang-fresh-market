@@ -1,13 +1,22 @@
 import { AspectRatio, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { NextPage } from "next";
-import Link from "next/link";
+import { useRouter } from "next/dist/client/router";
+import Image from "next/image";
 import React from "react";
 import { PageWrapper } from "../../components/PageWrapper";
+import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
-import Image from "next/image";
 
 const OrderConfirmedPage: NextPage = () => {
+  const { startProgress } = useProgress();
+  const router = useRouter();
+
+  const handleHome = () => {
+    startProgress();
+    router.push("/");
+  };
+
   return (
     <PageWrapper title="Your order is confirmed">
       <OuterContainer
@@ -46,17 +55,16 @@ const OrderConfirmedPage: NextPage = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Link href="/" passHref>
-            <Button
-              width="100%"
-              mb="4"
-              color="white"
-              backgroundColor={theme.colors.brand}
-              size="lg"
-            >
-              Go to Home
-            </Button>
-          </Link>
+          <Button
+            width="100%"
+            mb="4"
+            color="white"
+            backgroundColor={theme.colors.brand}
+            size="lg"
+            onClick={handleHome}
+          >
+            Go to Home
+          </Button>
           <Button
             width="100%"
             color={theme.colors.brand}
