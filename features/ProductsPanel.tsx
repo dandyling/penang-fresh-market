@@ -7,6 +7,9 @@ import theme from "../styles/theme";
 import { Product } from "./Product";
 import { ProductDescription } from "./ProductDescription";
 import Image from "next/image";
+import { useRouter } from "next/dist/client/router";
+import { useSetRecoilState } from "recoil";
+import { isLoadingState } from "../components/PageWrapper";
 
 interface ProductsPanelProps extends GridProps {
   products: Product[];
@@ -14,6 +17,8 @@ interface ProductsPanelProps extends GridProps {
 
 export const ProductsPanel = (props: ProductsPanelProps) => {
   const { products, ...rest } = props;
+  const router = useRouter();
+  const setIsLoading = useSetRecoilState(isLoadingState);
   return (
     <Container
       width="100%"
@@ -22,31 +27,39 @@ export const ProductsPanel = (props: ProductsPanelProps) => {
       {...rest}
     >
       {products.map((product: Product) => {
+        const handleClick = () => {
+          router.push(`product/${product.id}`);
+          setIsLoading(true);
+        };
+
         return (
-          <Link key={product.id} href={`product/${product.id}`} passHref>
-            <Flex as="button" className="product">
-              <AspectRatio
-                mr="4"
-                ratio={72 / 82}
-                minWidth="20%"
-                borderWidth="1px"
-                borderColor="gray.200"
-                borderRadius="lg"
-                shadow="lg"
-                overflow="hidden"
-              >
-                <Image
-                  src={`${API}${product.picture?.formats?.thumbnail.url}`}
-                  alt={product.name}
-                  objectFit="cover"
-                  layout="fill"
-                />
-              </AspectRatio>
-              <Flex padding="2" flex={1} flexDirection="column">
-                <ProductDescription product={product} />
-              </Flex>
+          <Flex
+            key={product.id}
+            as="button"
+            className="product"
+            onClick={handleClick}
+          >
+            <AspectRatio
+              mr="4"
+              ratio={72 / 82}
+              minWidth="20%"
+              borderWidth="1px"
+              borderColor="gray.200"
+              borderRadius="lg"
+              shadow="lg"
+              overflow="hidden"
+            >
+              <Image
+                src={`${API}${product.picture?.formats?.thumbnail.url}`}
+                alt={product.name}
+                objectFit="cover"
+                layout="fill"
+              />
+            </AspectRatio>
+            <Flex padding="2" flex={1} flexDirection="column">
+              <ProductDescription product={product} />
             </Flex>
-          </Link>
+          </Flex>
         );
       })}
     </Container>

@@ -20,14 +20,20 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { MdAddShoppingCart } from "react-icons/md";
-import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import {
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from "recoil";
 import useSWR from "swr";
 import { BottomPanel } from "../../components/BottomPanel";
 import { CircleBadge } from "../../components/CircleBadge";
 import { FloatButton } from "../../components/FloatButton";
 import { NumbersPanel } from "../../components/NumbersPanel";
 import { Toast } from "../../components/Toast";
-import { PageWrapper } from "../../components/PageWrapper";
+import { isLoadingState, PageWrapper } from "../../components/PageWrapper";
 import { Product } from "../../features/Product";
 import { getPriceLabel } from "../../features/ProductsPanel";
 import theme from "../../styles/theme";
@@ -36,7 +42,7 @@ import { Order } from "./../../features/Order";
 import { isServer } from "../../utils/utils";
 import produce from "immer";
 import Image from "next/image";
-import { LinearProgress } from "@material-ui/core";
+import { useEffect } from "react";
 
 export const ordersState = atom<Order[]>({
   key: "ordersState",
@@ -76,8 +82,14 @@ const ProductPage: NextPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [orders, setOrders] = useRecoilState(ordersState);
   const ordersCount = useRecoilValue(ordersCountState);
+  const setIsLoading = useSetRecoilState(isLoadingState);
   const { id } = router.query;
   const toast = useToast();
+
+  useEffect(() => {
+    setIsLoading(false);
+  });
+
   const { data: products, error: errorProducts } = useSWR<Product[]>(
     `${API}/products`,
     fetcher
@@ -88,7 +100,7 @@ const ProductPage: NextPage = () => {
   }
 
   if (!products) {
-    return <LinearProgress color="secondary" />;
+    return null;
   }
 
   const product = products?.find((p) => p.id === Number(id));
