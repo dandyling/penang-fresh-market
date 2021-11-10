@@ -167,6 +167,7 @@ const ProductPage: NextPage = () => {
             src={`${API}${product.picture.formats.small.url}`}
             layout="fill"
             objectFit="cover"
+            priority
           />
         </AspectRatio>
         <Flex position="absolute" top="56" width="100%" paddingX="3">

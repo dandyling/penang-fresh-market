@@ -37,6 +37,7 @@ const OrderConfirmedPage: NextPage = () => {
               alt="Your order is confirmed"
               layout="fill"
               objectFit="cover"
+              priority
             />
           </AspectRatio>
           <Flex flexDirection="column">
