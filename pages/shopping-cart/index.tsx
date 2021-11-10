@@ -87,7 +87,7 @@ const ShoppingCartPage: NextPage = () => {
       <Flex
         flexDirection="column"
         overflowY="scroll"
-        maxHeight="calc(100vh - 5.25rem)"
+        maxHeight="calc(100% - 5.25rem)"
       >
         <Flex minHeight="10" width="100%" backgroundColor="white" />
         <Grid
