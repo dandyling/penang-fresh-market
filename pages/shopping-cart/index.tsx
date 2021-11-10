@@ -67,9 +67,9 @@ const ShoppingCartPage: NextPage = () => {
       });
       if (response.ok) {
         startProgress();
-        await router.push("/order-confirmed");
         setOrders([]);
         localStorage.setItem("orders", "[]");
+        await router.push("/order-confirmed");
       } else {
         console.error(await response.json());
         toast({

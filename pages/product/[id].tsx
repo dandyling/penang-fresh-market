@@ -107,6 +107,11 @@ const ProductPage: NextPage = () => {
     return null;
   }
 
+  const handleNavigateCart = () => {
+    startProgress();
+    router.push("/shopping-cart");
+  };
+
   const addToCart = () => {
     const newOrders = produce(orders, (draft) => {
       const order = draft.find((o) => o.id === product.id);
@@ -199,12 +204,7 @@ const ProductPage: NextPage = () => {
         top="12"
         right="16"
       />
-      <Box
-        position="fixed"
-        top="12"
-        right="3"
-        onClick={() => router.push("/shopping-cart")}
-      >
+      <Box position="fixed" top="12" right="3" onClick={handleNavigateCart}>
         <FloatButton
           icon={<AiOutlineShoppingCart />}
           aria-label="Go to Shopping Cart"
