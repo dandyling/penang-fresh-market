@@ -1,4 +1,4 @@
-import { FlexProps } from "@chakra-ui/react";
+import { Flex, FlexProps } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { LinearProgress } from "@material-ui/core";
 import Head from "next/head";
@@ -23,7 +23,16 @@ export const PageWrapper = (props: PageWrapperProps) => {
         <meta name="description" content={title} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {children}
+      <Flex
+        position="fixed"
+        flexDirection="column"
+        top="0"
+        left="0"
+        width="100%"
+        height="100%"
+      >
+        {children}
+      </Flex>
     </FullHeight>
   );
 };
