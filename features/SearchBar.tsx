@@ -19,7 +19,7 @@ export const SearchBar = (props: SearchBarProps) => {
   const { search, setSearch, placeholder, ...rest } = props;
   return (
     <Flex {...rest}>
-      <InputGroup size="sm">
+      <InputGroup size="md">
         <Input
           backgroundColor={theme.colors.brandBackground}
           placeholder={placeholder}
