@@ -21,10 +21,10 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { BottomPanel } from "../../components/BottomPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { NoOrdersPanel } from "../../features/NoOrdersPanel";
+import { ordersState, ordersTotalState } from "../../features/Order";
 import { ProductOrdersPanel } from "../../features/ProductOrdersPanel";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
-import { ordersState, ordersTotalState } from "../product/[id]";
 import { API } from "../_app";
 
 interface DeliveryDetails {
@@ -40,8 +40,8 @@ const ShoppingCartPage: NextPage = () => {
   const [orders, setOrders] = useRecoilState(ordersState);
   const ordersTotal = useRecoilValue(ordersTotalState);
   const { register, handleSubmit } = useForm();
-  const toast = useToast();
   const { startProgress } = useProgress();
+  const toast = useToast();
 
   const handleOrder = async (data: DeliveryDetails) => {
     try {

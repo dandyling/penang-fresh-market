@@ -3,9 +3,8 @@ import styled from "@emotion/styled";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import { FloatButton } from "../components/FloatButton";
-import { ordersState } from "../pages/product/[id]";
 import theme from "../styles/theme";
-import { Order } from "./Order";
+import { Order, ordersState } from "./Order";
 import { ProductOrder } from "./ProductOrder";
 import { Container } from "./ProductsPanel";
 

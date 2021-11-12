@@ -1,12 +1,12 @@
-import { AspectRatio, Flex, useNumberInput } from "@chakra-ui/react";
+import { AspectRatio, Flex } from "@chakra-ui/react";
 import produce from "immer";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useRecoilState } from "recoil";
 import { NumbersPanel } from "../components/NumbersPanel";
-import { ordersState } from "../pages/product/[id]";
 import { API } from "../pages/_app";
+import { ordersState } from "./Order";
 import { ProductDescription } from "./ProductDescription";
 import { PanelButton } from "./ProductOrdersPanel";
 import { useNumbersPanel } from "./useNumbersPanel";

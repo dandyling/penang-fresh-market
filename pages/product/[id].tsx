@@ -20,7 +20,7 @@ import {
   AiOutlineLeft,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { atom, selector, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import useSWR from "swr";
 import { BottomPanel } from "../../components/BottomPanel";
 import { CircleBadge } from "../../components/CircleBadge";
@@ -33,39 +33,14 @@ import { getPrice, getPriceLabel } from "../../features/ProductsPanel";
 import { useNumbersPanel } from "../../features/useNumbersPanel";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
-import { isServer } from "../../utils/utils";
 import { API, fetcher } from "../_app";
-import { Order } from "./../../features/Order";
-
-export const ordersState = atom<Order[]>({
-  key: "ordersState",
-  default: !isServer ? JSON.parse(localStorage.getItem("orders") ?? "[]") : [],
-});
-
-const ordersSubState = selector<number[]>({
-  key: "ordersSubState",
-  get: ({ get }) => {
-    const orders = get(ordersState);
-    return orders.map((o) => o.price * o.quantity);
-  },
-});
-
-export const ordersTotalState = selector<number>({
-  key: "ordersTotalState",
-  get: ({ get }) => {
-    const ordersSub = get(ordersSubState);
-    return ordersSub.reduce((total, s) => {
-      return (total += s);
-    }, 0);
-  },
-});
+import { Order, ordersState } from "./../../features/Order";
 
 const ProductPage: NextPage = () => {
-  const router = useRouter();
   const [orders, setOrders] = useRecoilState(ordersState);
+  const router = useRouter();
   const { id } = router.query;
   const toast = useToast();
-
   const { startProgress, stopProgress } = useProgress();
 
   const { data: products, error: errorProducts } = useSWR<Product[]>(
@@ -82,11 +57,9 @@ const ProductPage: NextPage = () => {
   }, [products, startProgress, stopProgress]);
 
   const product = products?.find((p) => p.id === Number(id));
-
   const unit = product?.unit ?? "kg";
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumbersPanel({ unit });
-
   const quantity = Number((getInputProps() as any)?.value);
 
   if (errorProducts) {
