@@ -5,9 +5,7 @@ import {
   Flex,
   Heading,
   Icon,
-  IconButton,
   Text,
-  useNumberInput,
   useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
@@ -15,15 +13,14 @@ import produce from "immer";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   AiFillCheckCircle,
   AiOutlineHeart,
   AiOutlineLeft,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { MdAddShoppingCart } from "react-icons/md";
-import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { atom, selector, useRecoilState } from "recoil";
 import useSWR from "swr";
 import { BottomPanel } from "../../components/BottomPanel";
 import { CircleBadge } from "../../components/CircleBadge";
@@ -32,7 +29,8 @@ import { NumbersPanel } from "../../components/NumbersPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { Toast } from "../../components/Toast";
 import { Product } from "../../features/Product";
-import { getPriceLabel } from "../../features/ProductsPanel";
+import { getPrice, getPriceLabel } from "../../features/ProductsPanel";
+import { useNumbersPanel } from "../../features/useNumbersPanel";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
 import { isServer } from "../../utils/utils";
@@ -62,20 +60,9 @@ export const ordersTotalState = selector<number>({
   },
 });
 
-const ordersCountState = selector<number>({
-  key: "ordersCountState",
-  get: ({ get }) => {
-    const orders = get(ordersState);
-    return orders.reduce((total, p) => {
-      return (total += p.quantity);
-    }, 0);
-  },
-});
-
 const ProductPage: NextPage = () => {
   const router = useRouter();
   const [orders, setOrders] = useRecoilState(ordersState);
-  const ordersCount = useRecoilValue(ordersCountState);
   const { id } = router.query;
   const toast = useToast();
 
@@ -86,16 +73,6 @@ const ProductPage: NextPage = () => {
     fetcher
   );
 
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: 1,
-      min: 1,
-      max: 99,
-      precision: 0,
-    });
-  const quantity = Number((getInputProps() as any).value);
-
   useEffect(() => {
     if (!products) {
       startProgress();
@@ -104,16 +81,19 @@ const ProductPage: NextPage = () => {
     }
   }, [products, startProgress, stopProgress]);
 
+  const product = products?.find((p) => p.id === Number(id));
+
+  const unit = product?.unit ?? "kg";
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
+    useNumbersPanel({ unit });
+
+  const quantity = Number((getInputProps() as any)?.value);
+
   if (errorProducts) {
     return <Flex>An error has occurred.</Flex>;
   }
 
-  if (!products) {
-    return null;
-  }
-
-  const product = products?.find((p) => p.id === Number(id));
-  if (!product) {
+  if (!products || !product) {
     return null;
   }
 
@@ -151,12 +131,6 @@ const ProductPage: NextPage = () => {
         </Toast>
       ),
     });
-  };
-
-  const handleBuyNow = () => {
-    startProgress();
-    addToCart();
-    router.push("/shopping-cart");
   };
 
   return (
@@ -217,39 +191,37 @@ const ProductPage: NextPage = () => {
           icon={<AiOutlineShoppingCart />}
           aria-label="Go to Shopping Cart"
         />
-        {ordersCount > 0 && (
+        {orders.length > 0 && (
           <CircleBadge
             position="absolute"
             bottom="-1"
             right="-1"
             fontSize="xx-small"
           >
-            {ordersCount}
+            {orders.length}
           </CircleBadge>
         )}
       </Box>
       <BottomPanel>
-        <Flex>
-          <IconButton
-            size="lg"
-            variant="outline"
-            aria-label="Add to Cart"
-            color={theme.colors.brand}
-            borderColor={theme.colors.brand}
-            onClick={handleAddToCart}
-            icon={<MdAddShoppingCart />}
-          />
-          <Button
-            backgroundColor={theme.colors.brand}
-            color="white"
-            size="lg"
-            onClick={handleBuyNow}
-            flex={1}
-            marginLeft="3"
-          >
-            Buy Now
-          </Button>
-        </Flex>
+        <Button
+          justifyContent="space-between"
+          alignItems="center"
+          backgroundColor={theme.colors.brand}
+          color="white"
+          size="lg"
+          onClick={handleAddToCart}
+          paddingX="3"
+        >
+          <Text textAlign="left" flex={1} fontWeight="normal" fontSize="sm">
+            {quantity} {product.unit}
+          </Text>
+          <Text flex={3} fontWeight="medium">
+            Add to Cart
+          </Text>
+          <Text textAlign="right" flex={1} fontWeight="normal" fontSize="sm">
+            {getPrice(quantity * product.price)}
+          </Text>
+        </Button>
       </BottomPanel>
     </PageWrapper>
   );

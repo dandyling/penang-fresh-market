@@ -201,8 +201,8 @@ const ShoppingCartPage: NextPage = () => {
           justifyContent="space-between"
           onClick={handleSubmit(handleOrder)}
         >
-          <Text>Place Order</Text>
-          <Text>RM {ordersTotal.toFixed(2)}</Text>
+          <Text fontWeight="500">Place Order</Text>
+          <Text fontWeight="normal">RM {ordersTotal.toFixed(2)}</Text>
         </Button>
       </BottomPanel>
     </PageWrapper>

@@ -9,6 +9,7 @@ import { ordersState } from "../pages/product/[id]";
 import { API } from "../pages/_app";
 import { ProductDescription } from "./ProductDescription";
 import { PanelButton } from "./ProductOrdersPanel";
+import { useNumbersPanel } from "./useNumbersPanel";
 
 interface ProductOrderProps {
   index: number;
@@ -21,13 +22,7 @@ export const ProductOrder = (props: ProductOrderProps) => {
   const order = orders[index];
 
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: order.quantity,
-      min: 1,
-      max: 99,
-      precision: 0,
-    });
+    useNumbersPanel({ unit: order.unit, defaultValue: order.quantity });
   const quantity = Number((getInputProps() as any).value);
 
   useEffect(() => {
