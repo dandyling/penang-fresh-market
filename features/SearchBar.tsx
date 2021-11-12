@@ -27,6 +27,10 @@ export const SearchBar = (props: SearchBarProps) => {
           borderRadius="24"
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
+          _focus={{
+            borderColor: theme.colors.brand,
+            boxShadow: `0 0 0 1px ${theme.colors.brand}`,
+          }}
         />
         <InputRightElement pointerEvents="none">
           <Icon color={theme.colors.brand} as={AiOutlineSearch} />

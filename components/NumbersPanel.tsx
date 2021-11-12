@@ -1,38 +1,44 @@
-import { Flex, FlexProps, IconButton } from "@chakra-ui/react";
+import { Flex, FlexProps, IconButton, Input } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import theme from "../styles/theme";
 
 interface NumbersPanelProps extends FlexProps {
-  value: number;
-  min: number;
-  max: number;
-  onIncrement(): void;
-  onDecrement(): void;
+  getDecrementButtonProps(): any;
+  getIncrementButtonProps(): any;
+  getInputProps(arg: any): any;
 }
 
 export const NumbersPanel = (props: NumbersPanelProps) => {
-  const { value, min, max, onIncrement, onDecrement, ...rest } = props;
+  const {
+    getDecrementButtonProps,
+    getIncrementButtonProps,
+    getInputProps,
+    ...rest
+  } = props;
+
+  const inc = getIncrementButtonProps();
+  const dec = getDecrementButtonProps();
+  const input = getInputProps({ readOnly: true });
+
   return (
     <Flex {...rest}>
       <Container>
         <IconButton
+          {...dec}
           className="numbers-button"
           size="sm"
           aria-label="Decrease"
           icon={<AiOutlineMinus />}
-          onClick={onDecrement}
-          disabled={value <= min}
         />
-        <Flex>{value}</Flex>
+        <Input {...input} />
         <IconButton
+          {...inc}
           className="numbers-button"
           size="sm"
           aria-label="Increase"
           icon={<AiOutlinePlus />}
-          onClick={onIncrement}
-          disabled={value >= max}
         />
       </Container>
     </Flex>
@@ -40,6 +46,7 @@ export const NumbersPanel = (props: NumbersPanelProps) => {
 };
 
 const Container = styled(Flex)`
+  align-items: center;
   background-color: ${theme.colors.background};
   color: ${theme.colors.blackAlpha[700]};
   button {
@@ -57,10 +64,15 @@ const Container = styled(Flex)`
   button.numbers-button[disabled] {
     background: ${theme.colors.gray[400]};
   }
-  div {
-    justify-content: center;
-    align-items: center;
-    min-width: 2rem;
+  input {
+    max-height: 2rem;
+    max-width: 4rem;
+    padding: 0;
     font-size: ${theme.fontSizes.sm};
+    text-align: center;
+  }
+  input:focus {
+    border-style: none;
+    box-shadow: none;
   }
 `;

@@ -7,6 +7,7 @@ import {
   Icon,
   IconButton,
   Text,
+  useNumberInput,
   useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
@@ -73,7 +74,6 @@ const ordersCountState = selector<number>({
 
 const ProductPage: NextPage = () => {
   const router = useRouter();
-  const [quantity, setQuantity] = useState(1);
   const [orders, setOrders] = useRecoilState(ordersState);
   const ordersCount = useRecoilValue(ordersCountState);
   const { id } = router.query;
@@ -85,6 +85,16 @@ const ProductPage: NextPage = () => {
     `${API}/products`,
     fetcher
   );
+
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
+    useNumberInput({
+      step: 1,
+      defaultValue: 1,
+      min: 1,
+      max: 99,
+      precision: 0,
+    });
+  const quantity = Number((getInputProps() as any).value);
 
   useEffect(() => {
     if (!products) {
@@ -180,12 +190,9 @@ const ProductPage: NextPage = () => {
             </Text>
             <Text fontSize="sm">{getPriceLabel(product)}</Text>
             <NumbersPanel
-              paddingTop="1"
-              value={quantity}
-              min={0}
-              max={99}
-              onIncrement={() => setQuantity(quantity + 1)}
-              onDecrement={() => setQuantity(quantity - 1)}
+              getIncrementButtonProps={getIncrementButtonProps}
+              getDecrementButtonProps={getDecrementButtonProps}
+              getInputProps={getInputProps}
             />
           </Container>
         </Flex>
