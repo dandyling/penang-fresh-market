@@ -4,12 +4,12 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useRecoilState } from "recoil";
-import { NumbersPanel } from "../components/NumbersPanel";
-import { API } from "../pages/_app";
+import { NumbersPanel } from "../../components/NumbersPanel";
+import { API } from "../../pages/_app";
 import { ordersState } from "./Order";
-import { ProductDescription } from "./ProductDescription";
+import { ProductDescription } from "../product/ProductDescription";
 import { PanelButton } from "./ProductOrdersPanel";
-import { useNumbersPanel } from "./useNumbersPanel";
+import { useNumbersPanel } from "../product/useNumbersPanel";
 
 interface ProductOrderProps {
   index: number;

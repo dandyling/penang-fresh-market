@@ -7,7 +7,7 @@ import {
   AiOutlineInfoCircle,
   AiOutlineWhatsApp,
 } from "react-icons/ai";
-import theme from "../styles/theme";
+import theme from "../../styles/theme";
 
 interface IconButtonProps {
   label: string;

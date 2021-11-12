@@ -2,14 +2,14 @@ import { AspectRatio, Flex, Grid, GridProps } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Link from "next/link";
 import React from "react";
-import { API } from "../pages/_app";
-import theme from "../styles/theme";
+import { API } from "../../pages/_app";
+import theme from "../../styles/theme";
 import { Product } from "./Product";
 import { ProductDescription } from "./ProductDescription";
 import Image from "next/image";
 import { useRouter } from "next/dist/client/router";
 import { useSetRecoilState } from "recoil";
-import { isLoadingState } from "../components/PageWrapper";
+import { isLoadingState } from "../../components/PageWrapper";
 
 interface ProductsPanelProps extends GridProps {
   products: Product[];

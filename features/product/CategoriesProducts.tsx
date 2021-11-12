@@ -11,7 +11,7 @@ import { atom, useRecoilState } from "recoil";
 import { Category } from "./Category";
 import { Product } from "./Product";
 import { ProductsPanel } from "./ProductsPanel";
-import { TabBar } from "./TabBar";
+import { TabBar } from "../../components/TabBar";
 
 interface CategoriesProductsProps {
   categories: Category[];

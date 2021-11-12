@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
-import { isServer } from "../utils/utils";
-import { Product } from "./Product";
+import { isServer } from "../../utils/utils";
+import { Product } from "../product/Product";
 
 export interface Order extends Product {
   quantity: number;

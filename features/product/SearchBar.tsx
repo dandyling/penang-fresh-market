@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import theme from "../styles/theme";
+import theme from "../../styles/theme";
 
 interface SearchBarProps extends FlexProps {
   search: string;

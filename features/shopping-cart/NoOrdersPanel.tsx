@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { AiTwotoneShopping } from "react-icons/ai";
-import theme from "../styles/theme";
+import theme from "../../styles/theme";
 
 export const NoOrdersPanel = () => {
   const router = useRouter();

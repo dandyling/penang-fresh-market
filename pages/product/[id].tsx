@@ -28,13 +28,13 @@ import { FloatButton } from "../../components/FloatButton";
 import { NumbersPanel } from "../../components/NumbersPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { Toast } from "../../components/Toast";
-import { Product } from "../../features/Product";
-import { getPrice, getPriceLabel } from "../../features/ProductsPanel";
-import { useNumbersPanel } from "../../features/useNumbersPanel";
+import { Product } from "../../features/product/Product";
+import { getPrice, getPriceLabel } from "../../features/product/ProductsPanel";
+import { useNumbersPanel } from "../../features/product/useNumbersPanel";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
 import { API, fetcher } from "../_app";
-import { Order, ordersState } from "./../../features/Order";
+import { Order, ordersState } from "../../features/shopping-cart/Order";
 
 const ProductPage: NextPage = () => {
   const [orders, setOrders] = useRecoilState(ordersState);

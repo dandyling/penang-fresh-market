@@ -4,12 +4,12 @@ import React, { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
 import useSWR from "swr";
 import { PageWrapper } from "../components/PageWrapper";
-import { CategoriesProducts } from "../features/CategoriesProducts";
-import { Category } from "../features/Category";
-import { IconsPanel } from "../features/IconsPanel";
-import { Product } from "../features/Product";
-import { ProductsPanel } from "../features/ProductsPanel";
-import { SearchBar } from "../features/SearchBar";
+import { CategoriesProducts } from "../features/product/CategoriesProducts";
+import { Category } from "../features/product/Category";
+import { IconsPanel } from "../features/product/IconsPanel";
+import { Product } from "../features/product/Product";
+import { ProductsPanel } from "../features/product/ProductsPanel";
+import { SearchBar } from "../features/product/SearchBar";
 import { useProgress } from "../hooks/useProgress";
 import { API, fetcher } from "./_app";
 

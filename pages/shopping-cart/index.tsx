@@ -20,9 +20,12 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { BottomPanel } from "../../components/BottomPanel";
 import { PageWrapper } from "../../components/PageWrapper";
-import { NoOrdersPanel } from "../../features/NoOrdersPanel";
-import { ordersState, ordersTotalState } from "../../features/Order";
-import { ProductOrdersPanel } from "../../features/ProductOrdersPanel";
+import { NoOrdersPanel } from "../../features/shopping-cart/NoOrdersPanel";
+import {
+  ordersState,
+  ordersTotalState,
+} from "../../features/shopping-cart/Order";
+import { ProductOrdersPanel } from "../../features/shopping-cart/ProductOrdersPanel";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
 import { API } from "../_app";
