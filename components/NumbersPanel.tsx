@@ -1,10 +1,12 @@
-import { Flex, FlexProps, IconButton, Input } from "@chakra-ui/react";
+import { Box, Flex, FlexProps, IconButton } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { Unit } from "../features/product/useNumbersPanel";
 import theme from "../styles/theme";
 
 interface NumbersPanelProps extends FlexProps {
+  unit: Unit;
   getDecrementButtonProps(): any;
   getIncrementButtonProps(): any;
   getInputProps(arg: any): any;
@@ -12,6 +14,7 @@ interface NumbersPanelProps extends FlexProps {
 
 export const NumbersPanel = (props: NumbersPanelProps) => {
   const {
+    unit,
     getDecrementButtonProps,
     getIncrementButtonProps,
     getInputProps,
@@ -22,6 +25,7 @@ export const NumbersPanel = (props: NumbersPanelProps) => {
   const dec = getDecrementButtonProps();
   const input = getInputProps({ readOnly: true });
 
+  const quantity = formatUnit(parseFloat(input.value), unit);
   return (
     <Flex {...rest}>
       <Container>
@@ -32,7 +36,7 @@ export const NumbersPanel = (props: NumbersPanelProps) => {
           aria-label="Decrease"
           icon={<AiOutlineMinus />}
         />
-        <Input {...input} />
+        <Box fontSize="sm">{quantity}</Box>
         <IconButton
           {...inc}
           className="numbers-button"
@@ -64,10 +68,13 @@ const Container = styled(Flex)`
   button.numbers-button[disabled] {
     background: ${theme.colors.gray[400]};
   }
-  input {
+  div {
     max-height: 2rem;
-    max-width: 4rem;
-    padding: 0;
+    min-width: 4rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
     font-size: ${theme.fontSizes.sm};
     text-align: center;
   }
@@ -76,3 +83,11 @@ const Container = styled(Flex)`
     box-shadow: none;
   }
 `;
+
+export const formatUnit = (value: number, unit: Unit) => {
+  if (unit === "gram") {
+    return `${value * 1000} g`;
+  } else {
+    return `${value} ${unit}`;
+  }
+};

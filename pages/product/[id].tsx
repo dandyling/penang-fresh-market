@@ -25,7 +25,7 @@ import useSWR from "swr";
 import { BottomPanel } from "../../components/BottomPanel";
 import { CircleBadge } from "../../components/CircleBadge";
 import { FloatButton } from "../../components/FloatButton";
-import { NumbersPanel } from "../../components/NumbersPanel";
+import { formatUnit, NumbersPanel } from "../../components/NumbersPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { Toast } from "../../components/Toast";
 import { Product } from "../../features/product/Product";
@@ -137,6 +137,7 @@ const ProductPage: NextPage = () => {
             </Text>
             <Text fontSize="sm">{getPriceLabel(product)}</Text>
             <NumbersPanel
+              unit={unit}
               getIncrementButtonProps={getIncrementButtonProps}
               getDecrementButtonProps={getDecrementButtonProps}
               getInputProps={getInputProps}
@@ -186,7 +187,7 @@ const ProductPage: NextPage = () => {
           paddingX="3"
         >
           <Text textAlign="left" flex={1} fontWeight="normal" fontSize="sm">
-            {quantity} {product.unit}
+            {formatUnit(quantity, product.unit)}
           </Text>
           <Text flex={3} fontWeight="medium">
             Add to Cart

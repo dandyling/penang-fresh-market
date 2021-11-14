@@ -1,6 +1,6 @@
 import { useNumberInput, UseNumberInputProps } from "@chakra-ui/react";
 
-type Unit =
+export type Unit =
   | "kg"
   | "gram"
   | "pcs"
