@@ -65,9 +65,6 @@ const Container = styled(Flex)`
   button:hover {
     background: ${theme.colors.brand};
   }
-  button.numbers-button[disabled] {
-    background: ${theme.colors.gray[400]};
-  }
   div {
     max-height: 2rem;
     min-width: 4rem;
