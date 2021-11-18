@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import produce from "immer";
-import { NextPage } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/dist/client/router";
 import Image from "next/image";
 import React, { useEffect } from "react";
@@ -21,7 +21,6 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { useRecoilState } from "recoil";
-import useSWR from "swr";
 import { BottomPanel } from "../../components/BottomPanel";
 import { CircleBadge } from "../../components/CircleBadge";
 import { FloatButton } from "../../components/FloatButton";
@@ -31,42 +30,35 @@ import { Toast } from "../../components/Toast";
 import { Product } from "../../features/product/Product";
 import { getPrice, getPriceLabel } from "../../features/product/ProductsPanel";
 import { useNumbersPanel } from "../../features/product/useNumbersPanel";
+import { Order, ordersState } from "../../features/shopping-cart/Order";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
-import { API, fetcher } from "../_app";
-import { Order, ordersState } from "../../features/shopping-cart/Order";
+import { API } from "../_app";
 
-const ProductPage: NextPage = () => {
+interface ProductPageProps {
+  product: Product;
+}
+
+const ProductPage = ({ product }: ProductPageProps) => {
   const [orders, setOrders] = useRecoilState(ordersState);
   const router = useRouter();
-  const { id } = router.query;
   const toast = useToast();
   const { startProgress, stopProgress } = useProgress();
 
-  const { data: products, error: errorProducts } = useSWR<Product[]>(
-    `${API}/products`,
-    fetcher
-  );
-
   useEffect(() => {
-    if (!products) {
+    if (!product) {
       startProgress();
     } else {
       stopProgress();
     }
-  }, [products, startProgress, stopProgress]);
+  }, [product, startProgress, stopProgress]);
 
-  const product = products?.find((p) => p.id === Number(id));
   const unit = product?.unit ?? "kg";
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumbersPanel({ unit });
   const quantity = Number((getInputProps() as any)?.value);
 
-  if (errorProducts) {
-    return <Flex>An error has occurred.</Flex>;
-  }
-
-  if (!products || !product) {
+  if (!product) {
     return null;
   }
 
@@ -219,3 +211,24 @@ const Container = styled(Flex)`
 `;
 
 export default ProductPage;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const resProducts = await fetch(`${API}/products`);
+  const products: Product[] = await resProducts.json();
+  const paths = products.map((p) => ({ params: { id: String(p.id) } }));
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { params } = context;
+  const resProduct = await fetch(`${API}/products/${params?.id}`);
+  const product = await resProduct.json();
+  return {
+    props: {
+      product,
+    },
+  };
+};

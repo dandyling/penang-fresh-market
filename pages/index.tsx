@@ -1,8 +1,7 @@
 import { Flex, Heading } from "@chakra-ui/react";
-import type { NextPage } from "next";
+import type { GetStaticProps } from "next";
 import React, { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
-import useSWR from "swr";
 import { PageWrapper } from "../components/PageWrapper";
 import { CategoriesProducts } from "../features/product/CategoriesProducts";
 import { Category } from "../features/product/Category";
@@ -11,24 +10,21 @@ import { Product } from "../features/product/Product";
 import { ProductsPanel } from "../features/product/ProductsPanel";
 import { SearchBar } from "../features/product/SearchBar";
 import { useProgress } from "../hooks/useProgress";
-import { API, fetcher } from "./_app";
+import { API } from "./_app";
 
 const searchState = atom({
   key: "searchState",
   default: "",
 });
 
-const Home: NextPage = () => {
+interface HomeProps {
+  categories: Category[];
+  products: Product[];
+}
+
+const Home = ({ categories, products }: HomeProps) => {
   const [search, setSearch] = useRecoilState(searchState);
   const { startProgress, stopProgress } = useProgress();
-  const { data: categories, error: errorCategories } = useSWR<Category[]>(
-    `${API}/categories`,
-    fetcher
-  );
-  const { data: products, error: errorProducts } = useSWR<Product[]>(
-    `${API}/products`,
-    fetcher
-  );
 
   useEffect(() => {
     if (!products || !categories) {
@@ -38,9 +34,6 @@ const Home: NextPage = () => {
     }
   }, [products, categories, startProgress, stopProgress]);
 
-  if (errorProducts || errorCategories) {
-    return <Flex>An error has occurred.</Flex>;
-  }
   if (!products || !categories) {
     return null;
   }
@@ -90,3 +83,17 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const resCategories = await fetch(`${API}/categories`);
+  const categories: Category[] = await resCategories.json();
+  const resProducts = await fetch(`${API}/products`);
+  const products: Product[] = await resProducts.json();
+  const props: HomeProps = {
+    categories,
+    products,
+  };
+  return {
+    props,
+  };
+};
