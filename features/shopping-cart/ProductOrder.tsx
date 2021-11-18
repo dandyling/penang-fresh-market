@@ -85,6 +85,7 @@ export const ProductOrder = (props: ProductOrderProps) => {
         <NumbersPanel
           alignSelf="flex-end"
           paddingTop="2"
+          unit={order.unit}
           getIncrementButtonProps={getIncrementButtonProps}
           getDecrementButtonProps={getDecrementButtonProps}
           getInputProps={getInputProps}
