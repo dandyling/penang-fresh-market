@@ -2,6 +2,7 @@ import { Flex, Heading } from "@chakra-ui/react";
 import type { GetStaticProps } from "next";
 import React, { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
+import useSWR from "swr";
 import { PageWrapper } from "../components/PageWrapper";
 import { CategoriesProducts } from "../features/product/CategoriesProducts";
 import { Category } from "../features/product/Category";
@@ -10,7 +11,7 @@ import { Product } from "../features/product/Product";
 import { ProductsPanel } from "../features/product/ProductsPanel";
 import { SearchBar } from "../features/product/SearchBar";
 import { useProgress } from "../hooks/useProgress";
-import { API } from "./_app";
+import { API, fetcher } from "./_app";
 
 const searchState = atom({
   key: "searchState",
@@ -25,6 +26,7 @@ interface HomeProps {
 const Home = ({ categories, products }: HomeProps) => {
   const [search, setSearch] = useRecoilState(searchState);
   const { startProgress, stopProgress } = useProgress();
+  const { data, error } = useSWR<Product[]>(`${API}/products`, fetcher);
 
   useEffect(() => {
     if (!products || !categories) {
@@ -34,10 +36,14 @@ const Home = ({ categories, products }: HomeProps) => {
     }
   }, [products, categories, startProgress, stopProgress]);
 
-  if (!products || !categories) {
+  if (error) {
+    return <Flex>An error has occurred.</Flex>;
+  }
+  if (!data) {
     return null;
   }
-  const searchedProducts = products.filter(
+
+  const searchedProducts = data.filter(
     (product) =>
       product.name.toLowerCase().includes(search.toLowerCase()) ||
       product.category.name.toLowerCase().includes(search.toLowerCase())
