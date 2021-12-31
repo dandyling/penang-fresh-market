@@ -5,9 +5,9 @@ import { atom, useRecoilState } from "recoil";
 import useSWR from "swr";
 import { PageWrapper } from "../components/PageWrapper";
 import { CategoriesProducts } from "../features/product/CategoriesProducts";
-import { Category } from "../features/product/Category";
+import { CategoryResponse } from "../features/product/Category";
 import { IconsPanel } from "../features/product/IconsPanel";
-import { Product } from "../features/product/Product";
+import { ProductResponse } from "../features/product/Product";
 import { ProductsPanel } from "../features/product/ProductsPanel";
 import { SearchBar } from "../features/product/SearchBar";
 import { useProgress } from "../hooks/useProgress";
@@ -19,14 +19,17 @@ const searchState = atom({
 });
 
 interface HomeProps {
-  categories: Category[];
-  products: Product[];
+  categories: CategoryResponse;
+  products: ProductResponse;
 }
 
 const Home = ({ categories, products }: HomeProps) => {
   const [search, setSearch] = useRecoilState(searchState);
   const { startProgress, stopProgress } = useProgress();
-  const { data, error } = useSWR<Product[]>(`${API}/products`, fetcher);
+  const { data: productData, error } = useSWR<ProductResponse>(
+    `${API}/api/products?populate=*`,
+    fetcher
+  );
 
   useEffect(() => {
     if (!products || !categories) {
@@ -39,14 +42,17 @@ const Home = ({ categories, products }: HomeProps) => {
   if (error) {
     return <Flex>An error has occurred.</Flex>;
   }
+  const data = productData?.data ?? [];
   if (!data) {
     return null;
   }
 
   const searchedProducts = data.filter(
     (product) =>
-      product.name.toLowerCase().includes(search.toLowerCase()) ||
-      product.category.name.toLowerCase().includes(search.toLowerCase())
+      product.attributes.name.toLowerCase().includes(search.toLowerCase()) ||
+      product.attributes.category.data.attributes.name
+        .toLowerCase()
+        .includes(search.toLowerCase())
   );
 
   return (
@@ -71,8 +77,8 @@ const Home = ({ categories, products }: HomeProps) => {
       >
         {search === "" && (
           <CategoriesProducts
-            products={products ?? []}
-            categories={categories ?? []}
+            products={products.data ?? []}
+            categories={categories.data ?? []}
           />
         )}
         {search !== "" && (
@@ -91,10 +97,10 @@ const Home = ({ categories, products }: HomeProps) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const resCategories = await fetch(`${API}/categories`);
-  const categories: Category[] = await resCategories.json();
-  const resProducts = await fetch(`${API}/products`);
-  const products: Product[] = await resProducts.json();
+  const resCategories = await fetch(`${API}/api/categories`);
+  const categories: CategoryResponse = await resCategories.json();
+  const resProducts = await fetch(`${API}/api/products`);
+  const products: ProductResponse = await resProducts.json();
   const props: HomeProps = {
     categories,
     products,

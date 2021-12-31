@@ -50,8 +50,8 @@ export const ProductsPanel = (props: ProductsPanelProps) => {
               overflow="hidden"
             >
               <Image
-                src={`${API}${product.picture?.formats?.thumbnail.url}`}
-                alt={product.name}
+                src={`${API}${product.attributes.picture?.data.attributes.formats?.thumbnail.url}`}
+                alt={product.attributes.name}
                 objectFit="cover"
                 layout="fill"
               />
@@ -77,7 +77,10 @@ export const Container = styled(Grid)`
 `;
 
 export const getPriceLabel = (product: Product) => {
-  return product.price_label ?? getPricePerUnit(product.price, product.unit);
+  return (
+    product.attributes.price_label ??
+    getPricePerUnit(product.attributes.price, product.attributes.unit)
+  );
 };
 
 export const getPricePerUnit = (price: number, unit: string) => {

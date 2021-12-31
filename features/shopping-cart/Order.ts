@@ -15,7 +15,7 @@ const ordersSubState = selector<number[]>({
   key: "ordersSubState",
   get: ({ get }) => {
     const orders = get(ordersState);
-    return orders.map((o) => o.price * o.quantity);
+    return orders.map((o) => o.attributes.price * o.quantity);
   },
 });
 

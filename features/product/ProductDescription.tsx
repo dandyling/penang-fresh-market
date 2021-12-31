@@ -14,10 +14,10 @@ export const ProductDescription = ({
   return (
     <Flex flexDirection="column" {...rest}>
       <Heading as="h3" fontSize="md" fontWeight="medium">
-        {product.name}
+        {product.attributes.name}
       </Heading>
       <Text fontSize="sm" color="gray.500">
-        {product.label}
+        {product.attributes.label}
       </Text>
       <Text fontSize="sm">{getPriceLabel(product)}</Text>
     </Flex>

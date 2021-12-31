@@ -27,7 +27,7 @@ import { FloatButton } from "../../components/FloatButton";
 import { formatUnit, NumbersPanel } from "../../components/NumbersPanel";
 import { PageWrapper } from "../../components/PageWrapper";
 import { Toast } from "../../components/Toast";
-import { Product } from "../../features/product/Product";
+import { Product, ProductResponse } from "../../features/product/Product";
 import { getPrice, getPriceLabel } from "../../features/product/ProductsPanel";
 import { useNumbersPanel } from "../../features/product/useNumbersPanel";
 import { Order, ordersState } from "../../features/shopping-cart/Order";
@@ -53,7 +53,7 @@ const ProductPage = ({ product }: ProductPageProps) => {
     }
   }, [product, startProgress, stopProgress]);
 
-  const unit = product?.unit ?? "kg";
+  const unit = product?.attributes.unit ?? "kg";
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumbersPanel({ unit });
   const quantity = Number((getInputProps() as any)?.value);
@@ -99,7 +99,7 @@ const ProductPage = ({ product }: ProductPageProps) => {
   };
 
   return (
-    <PageWrapper title={`Penang Fresh Market - ${product.name}`}>
+    <PageWrapper title={`Penang Fresh Market - ${product.attributes.name}`}>
       <Flex width="100%" height="100%" position="relative">
         <AspectRatio
           position="absolute"
@@ -112,8 +112,8 @@ const ProductPage = ({ product }: ProductPageProps) => {
           top="0"
         >
           <Image
-            alt={product.name}
-            src={`${API}${product.picture.formats.small.url}`}
+            alt={product.attributes.name}
+            src={`${API}${product.attributes.picture?.data.attributes.formats?.small.url}`}
             layout="fill"
             objectFit="cover"
             priority
@@ -122,10 +122,10 @@ const ProductPage = ({ product }: ProductPageProps) => {
         <Flex position="absolute" top="56" width="100%" paddingX="3">
           <Container>
             <Heading as="h2" fontWeight="medium" fontSize="lg">
-              {product.name}
+              {product.attributes.name}
             </Heading>
             <Text color="gray.500" fontSize="sm">
-              {product.label}
+              {product.attributes.label}
             </Text>
             <Text fontSize="sm">{getPriceLabel(product)}</Text>
             <NumbersPanel
@@ -179,13 +179,13 @@ const ProductPage = ({ product }: ProductPageProps) => {
           paddingX="3"
         >
           <Text textAlign="left" flex={1} fontWeight="normal" fontSize="sm">
-            {formatUnit(quantity, product.unit)}
+            {formatUnit(quantity, product.attributes.unit)}
           </Text>
           <Text flex={3} fontWeight="medium">
             Add to Cart
           </Text>
           <Text textAlign="right" flex={1} fontWeight="normal" fontSize="sm">
-            {getPrice(quantity * product.price)}
+            {getPrice(quantity * product.attributes.price)}
           </Text>
         </Button>
       </BottomPanel>
@@ -213,9 +213,9 @@ const Container = styled(Flex)`
 export default ProductPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const resProducts = await fetch(`${API}/products`);
-  const products: Product[] = await resProducts.json();
-  const paths = products.map((p) => ({ params: { id: String(p.id) } }));
+  const resProducts = await fetch(`${API}/api/products?populate=*`);
+  const products: ProductResponse = await resProducts.json();
+  const paths = products.data.map((p) => ({ params: { id: String(p.id) } }));
   return {
     paths,
     fallback: false,
@@ -224,11 +224,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
-  const resProduct = await fetch(`${API}/products/${params?.id}`);
+  const resProduct = await fetch(
+    `${API}/api/products/${params?.id}?populate=*`
+  );
   const product = await resProduct.json();
   return {
     props: {
-      product,
+      product: product.data,
     },
   };
 };

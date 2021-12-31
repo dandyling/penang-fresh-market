@@ -6,9 +6,9 @@ module.exports = {
     API:
       process.env.NODE_ENV === "development"
         ? "http://localhost:1337"
-        : "https://strapi-opei.onrender.com",
+        : "https://strapi-penang.herokuapp.com",
   },
   images: {
-    domains: ["localhost", "strapi-opei.onrender.com"],
+    domains: ["localhost", "https://strapi-penang.herokuapp.com"],
   },
 };

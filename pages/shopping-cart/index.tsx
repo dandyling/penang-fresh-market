@@ -48,31 +48,33 @@ const ShoppingCartPage: NextPage = () => {
 
   const handleOrder = async (data: DeliveryDetails) => {
     try {
-      const response = await fetch(`${API}/orders`, {
+      const response = await fetch(`${API}/api/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone_number: data.phoneNumber,
-          notes: data.notes,
-          status: "new",
-          products: orders.map((order) => ({
-            code: order.label,
-            name: order.name,
-            quantity: order.quantity,
-            unit: order.unit,
-          })),
-          name: data.name,
-          address_line_1: data.address1,
-          address_line_2: data.address2,
+          data: {
+            phone_number: data.phoneNumber,
+            notes: data.notes,
+            status: "new",
+            products: orders.map((order) => ({
+              code: order.attributes.label,
+              name: order.attributes.name,
+              quantity: order.quantity,
+              unit: order.attributes.unit,
+            })),
+            name: data.name,
+            address_line_1: data.address1,
+            address_line_2: data.address2,
+          },
         }),
       });
       if (response.ok) {
+        router.push("/order-confirmed");
         startProgress();
         setOrders([]);
         localStorage.setItem("orders", "[]");
-        await router.push("/order-confirmed");
       } else {
         console.error(await response.json());
         toast({

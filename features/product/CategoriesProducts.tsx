@@ -35,7 +35,7 @@ export const CategoriesProducts = (props: CategoriesProductsProps) => {
             <Tab key={category.id}>
               <Flex>
                 <Heading textShadow="2xl" as="h3">
-                  {category.name}
+                  {category.attributes.name}
                 </Heading>
               </Flex>
             </Tab>
@@ -45,7 +45,7 @@ export const CategoriesProducts = (props: CategoriesProductsProps) => {
       <TabPanels>
         {categories.map((category: Category) => {
           const categoryProducts = products.filter(
-            (product) => product.category?.id === category.id
+            (product) => product.attributes.category?.data.id === category.id
           );
           return (
             <TabPanel key={category.id} padding="0">

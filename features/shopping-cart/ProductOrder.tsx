@@ -22,7 +22,10 @@ export const ProductOrder = (props: ProductOrderProps) => {
   const order = orders[index];
 
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumbersPanel({ unit: order.unit, defaultValue: order.quantity });
+    useNumbersPanel({
+      unit: order.attributes.unit,
+      defaultValue: order.quantity,
+    });
   const quantity = Number((getInputProps() as any).value);
 
   useEffect(() => {
@@ -67,8 +70,8 @@ export const ProductOrder = (props: ProductOrderProps) => {
           <Image
             layout="fill"
             objectFit="cover"
-            src={`${API}${order.picture?.formats?.thumbnail.url}`}
-            alt={order.name}
+            src={`${API}${order.attributes.picture?.data.attributes.formats?.thumbnail.url}`}
+            alt={order.attributes.name}
           />
         </AspectRatio>
         <Flex flex={1} />
@@ -85,7 +88,7 @@ export const ProductOrder = (props: ProductOrderProps) => {
         <NumbersPanel
           alignSelf="flex-end"
           paddingTop="2"
-          unit={order.unit}
+          unit={order.attributes.unit}
           getIncrementButtonProps={getIncrementButtonProps}
           getDecrementButtonProps={getDecrementButtonProps}
           getInputProps={getInputProps}
