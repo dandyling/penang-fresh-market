@@ -9,6 +9,6 @@ module.exports = {
         : "https://strapi-penang.herokuapp.com",
   },
   images: {
-    domains: ["localhost", "strapi-penang.herokuapp.com"],
+    domains: ["localhost", "strapi-penang.herokuapp.com", "res.cloudinary.com"],
   },
 };
