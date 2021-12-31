@@ -5,11 +5,11 @@ import React, { useEffect } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useRecoilState } from "recoil";
 import { NumbersPanel } from "../../components/NumbersPanel";
-import { API } from "../../pages/_app";
-import { ordersState } from "./Order";
+import { IMAGE_HOST } from "../../pages/_app";
 import { ProductDescription } from "../product/ProductDescription";
-import { PanelButton } from "./ProductOrdersPanel";
 import { useNumbersPanel } from "../product/useNumbersPanel";
+import { ordersState } from "./Order";
+import { PanelButton } from "./ProductOrdersPanel";
 
 interface ProductOrderProps {
   index: number;
@@ -70,7 +70,7 @@ export const ProductOrder = (props: ProductOrderProps) => {
           <Image
             layout="fill"
             objectFit="cover"
-            src={`${API}${order.attributes.picture?.data.attributes.formats?.thumbnail.url}`}
+            src={`${IMAGE_HOST}${order.attributes.picture?.data.attributes.formats?.thumbnail.url}`}
             alt={order.attributes.name}
           />
         </AspectRatio>

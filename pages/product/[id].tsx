@@ -33,7 +33,7 @@ import { useNumbersPanel } from "../../features/product/useNumbersPanel";
 import { Order, ordersState } from "../../features/shopping-cart/Order";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
-import { API } from "../_app";
+import { IMAGE_HOST, SERVER } from "../_app";
 
 interface ProductPageProps {
   product: Product;
@@ -113,7 +113,7 @@ const ProductPage = ({ product }: ProductPageProps) => {
         >
           <Image
             alt={product.attributes.name}
-            src={`${API}${product.attributes.picture?.data.attributes.formats?.small.url}`}
+            src={`${IMAGE_HOST}${product.attributes.picture?.data.attributes.formats?.small.url}`}
             layout="fill"
             objectFit="cover"
             priority
@@ -213,7 +213,7 @@ const Container = styled(Flex)`
 export default ProductPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const resProducts = await fetch(`${API}/api/products?populate=*`);
+  const resProducts = await fetch(`${SERVER}/api/products?populate=*`);
   const products: ProductResponse = await resProducts.json();
   const paths = products.data.map((p) => ({ params: { id: String(p.id) } }));
   return {
@@ -225,7 +225,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
   const resProduct = await fetch(
-    `${API}/api/products/${params?.id}?populate=*`
+    `${SERVER}/api/products/${params?.id}?populate=*`
   );
   const product = await resProduct.json();
   return {

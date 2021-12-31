@@ -28,7 +28,7 @@ import {
 import { ProductOrdersPanel } from "../../features/shopping-cart/ProductOrdersPanel";
 import { useProgress } from "../../hooks/useProgress";
 import theme from "../../styles/theme";
-import { API } from "../_app";
+import { SERVER } from "../_app";
 
 interface DeliveryDetails {
   name: string;
@@ -48,7 +48,7 @@ const ShoppingCartPage: NextPage = () => {
 
   const handleOrder = async (data: DeliveryDetails) => {
     try {
-      const response = await fetch(`${API}/api/orders`, {
+      const response = await fetch(`${SERVER}/api/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

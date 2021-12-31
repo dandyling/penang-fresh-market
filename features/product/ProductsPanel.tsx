@@ -1,15 +1,14 @@
 import { AspectRatio, Flex, Grid, GridProps } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import Link from "next/link";
+import { useRouter } from "next/dist/client/router";
+import Image from "next/image";
 import React from "react";
-import { API } from "../../pages/_app";
+import { useSetRecoilState } from "recoil";
+import { isLoadingState } from "../../components/PageWrapper";
+import { IMAGE_HOST } from "../../pages/_app";
 import theme from "../../styles/theme";
 import { Product } from "./Product";
 import { ProductDescription } from "./ProductDescription";
-import Image from "next/image";
-import { useRouter } from "next/dist/client/router";
-import { useSetRecoilState } from "recoil";
-import { isLoadingState } from "../../components/PageWrapper";
 
 interface ProductsPanelProps extends GridProps {
   products: Product[];
@@ -50,7 +49,7 @@ export const ProductsPanel = (props: ProductsPanelProps) => {
               overflow="hidden"
             >
               <Image
-                src={`${API}${product.attributes.picture?.data.attributes.formats?.thumbnail.url}`}
+                src={`${IMAGE_HOST}${product.attributes.picture?.data.attributes.formats?.thumbnail.url}`}
                 alt={product.attributes.name}
                 objectFit="cover"
                 layout="fill"

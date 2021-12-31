@@ -11,7 +11,7 @@ import { ProductResponse } from "../features/product/Product";
 import { ProductsPanel } from "../features/product/ProductsPanel";
 import { SearchBar } from "../features/product/SearchBar";
 import { useProgress } from "../hooks/useProgress";
-import { API, fetcher } from "./_app";
+import { SERVER, fetcher } from "./_app";
 
 const searchState = atom({
   key: "searchState",
@@ -27,7 +27,7 @@ const Home = ({ categories, products }: HomeProps) => {
   const [search, setSearch] = useRecoilState(searchState);
   const { startProgress, stopProgress } = useProgress();
   const { data: productData, error } = useSWR<ProductResponse>(
-    `${API}/api/products?populate=*`,
+    `${SERVER}/api/products?populate=*`,
     fetcher
   );
 
@@ -97,9 +97,9 @@ const Home = ({ categories, products }: HomeProps) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const resCategories = await fetch(`${API}/api/categories?populate=*`);
+  const resCategories = await fetch(`${SERVER}/api/categories?populate=*`);
   const categories: CategoryResponse = await resCategories.json();
-  const resProducts = await fetch(`${API}/api/products?populate=*`);
+  const resProducts = await fetch(`${SERVER}/api/products?populate=*`);
   const products: ProductResponse = await resProducts.json();
   const props: HomeProps = {
     categories,
