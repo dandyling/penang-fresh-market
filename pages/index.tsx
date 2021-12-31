@@ -97,9 +97,9 @@ const Home = ({ categories, products }: HomeProps) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const resCategories = await fetch(`${API}/api/categories`);
+  const resCategories = await fetch(`${API}/api/categories?populate=*`);
   const categories: CategoryResponse = await resCategories.json();
-  const resProducts = await fetch(`${API}/api/products`);
+  const resProducts = await fetch(`${API}/api/products?populate=*`);
   const products: ProductResponse = await resProducts.json();
   const props: HomeProps = {
     categories,
