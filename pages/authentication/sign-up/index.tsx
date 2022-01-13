@@ -5,22 +5,69 @@ import {
   Heading,
   IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AiOutlineArrowLeft, AiOutlineLeft } from "react-icons/ai";
+import {
+  AiFillEye,
+  AiFillEyeInvisible,
+  AiOutlineArrowLeft,
+} from "react-icons/ai";
 import { PageWrapper } from "../../../components/PageWrapper";
 import theme from "../../../styles/theme";
+import { SERVER } from "../../_app";
+import { LoginDetails } from "../login";
+
+interface UserDetails extends LoginDetails {
+  username: string;
+}
 
 const LoginPage: NextPage = () => {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
+  const toast = useToast();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    console.log();
+  const toggleShowPassword = () => {
+    setShowPassword((value) => !value);
+  };
+
+  const handleLogin = async (data: UserDetails) => {
+    try {
+      const response = await fetch(`${SERVER}/api/auth/local/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: data.username,
+          email: data.emailAddress,
+          password: data.password,
+        }),
+      });
+
+      const json = await response.json();
+      if (response.ok) {
+        localStorage.setItem("penang-fresh", json.jwt);
+        router.push("/");
+      } else {
+        throw new Error(json.error.message);
+      }
+    } catch (e) {
+      toast({
+        position: "top",
+        duration: 800,
+        title: "Sign Up Error",
+        description: e.message,
+        status: "error",
+      });
+    }
   };
 
   return (
@@ -36,7 +83,7 @@ const LoginPage: NextPage = () => {
           onClick={router.back}
         />
       </Flex>
-      <Container>
+      <Form onSubmit={handleSubmit(handleLogin)}>
         <Heading marginBottom="8" color={theme.colors.brand} as="h1">
           Sign Up
         </Heading>
@@ -55,34 +102,43 @@ const LoginPage: NextPage = () => {
           />
         </FormControl>
         <FormControl isRequired>
-          <Input
-            size="lg"
-            placeholder="Password"
-            {...register("password", { required: true })}
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <Input
-            size="lg"
-            placeholder="Confirm Password"
-            {...register("confirmPassword", { required: true })}
-          />
+          <InputGroup size="lg">
+            <Input
+              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+              {...register("password", { required: true })}
+            />
+            <InputRightElement>
+              <IconButton
+                aria-label={showPassword ? "Hide Password" : "Show Password"}
+                icon={showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                variant="ghost"
+                color={theme.colors.gray}
+                size="lg"
+                fontSize="2xl"
+                onClick={toggleShowPassword}
+                mr="2"
+              />
+            </InputRightElement>
+          </InputGroup>
         </FormControl>
         <Button
+          type="submit"
+          value="submit"
           size="lg"
           backgroundColor={theme.colors.brand}
           color="white"
-          onClick={handleSubmit(handleLogin)}
           marginTop="8"
         >
           Sign Up
         </Button>
-      </Container>
+      </Form>
     </PageWrapper>
   );
 };
 
-const Container = styled(Flex)`
+const Form = styled.form`
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
