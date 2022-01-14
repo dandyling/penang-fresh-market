@@ -62,7 +62,7 @@ const LoginPage: NextPage = () => {
       } else {
         throw new Error(json.error.message);
       }
-    } catch (e) {
+    } catch (e: any) {
       toast({
         position: "top",
         duration: 800,
